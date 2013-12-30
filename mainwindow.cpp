@@ -9,11 +9,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_Beenden,SIGNAL(triggered()),this,SLOT(slotClose()));
     connect(ui->pushNBlatt,SIGNAL(clicked()),this,SLOT(slotNeuesBlatt()));
     connect(ui->pushNKurs,SIGNAL(clicked()),this,SLOT(slotNeuerKurs()));
-    connect(ui->listView->selectionModel(),SIGNAL(selectionChanged(QItemSelection &,QItemSelection &)),this,SLOT(selectionChangedSlot(const QItemSelection &,const QItemSelection &)));
     Liste=new QStandardItemModel(0,1,this);
     Liste->setHorizontalHeaderItem(0,new QStandardItem(QString("Name")));
     ui->listView->setModel(Liste);
     Auswahl=-1;
+    connect(ui->listView->selectionModel(),SIGNAL(selectionChanged(QItemSelection ,QItemSelection )),
+            this,SLOT(selectionChangedSlot(QItemSelection ,QItemSelection )));
 }
 
 MainWindow::~MainWindow()
@@ -50,9 +51,14 @@ void MainWindow::slotNeuerKurs()
     }
 }
 
-void MainWindow::selectionChangedSlot(const QItemSelection &  , const QItemSelection & )
+void MainWindow::selectionChangedSlot(const QItemSelection& neu  , const QItemSelection & )
 {
-    const QModelIndex index=ui->listView->selectionModel()->currentIndex();
-
-    ui->tableView->setModel(Kurse[index.column()]);
+    QString Index=neu.indexes().first().data().toString();
+    for (size_t i=0;i<Kurse.size();++i)
+    {
+        if(Kurse[i]->getName()==Index)
+            Auswahl=i;
+    }
+    //const QModelIndex index=ui->listView->selectionModel()->currentIndex();
+    ui->tableView->setModel(Kurse[Auswahl]);
 }
