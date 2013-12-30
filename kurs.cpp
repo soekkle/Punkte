@@ -9,6 +9,8 @@ void Kurs::addBlatt(int Max,int Erreicht)
 {
     MaxPunkte.push_back(Max);
     ErPunkte.push_back(Erreicht);
+    QModelIndex topLeft=createIndex(0,0),bottomRight=createIndex(anzBlaetter(),1);
+    emit dataChanged(topLeft,bottomRight);
 }
 
 int Kurs::anzBlaetter() const
@@ -53,11 +55,10 @@ QVariant Kurs::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole)
     {
         if(index.column()==0)
-            return QString("%1").arg(ErPunkte[index.column()]);
-       return QString("Row%1, Column%2")
-                   .arg(index.row() + 1)
-                   .arg(index.column() +1);
-    }
+            return QString("%1").arg(ErPunkte[index.row()]);
+        if(index.column()==1)
+            return QString("%1").arg(MaxPunkte[index.row()]);
+     }
     return QVariant();
 }
 
@@ -75,4 +76,25 @@ QVariant Kurs::headerData(int section, Qt::Orientation orientation, int role) co
         }
     }
     return QAbstractTableModel::headerData(section,orientation,role);
+}
+
+bool Kurs::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if(role==Qt::EditRole)
+    {
+        if (index.column()==0)
+        {
+            ErPunkte[index.row()]=value.toInt();
+        }
+        else if(index.column()==1)
+        {
+            MaxPunkte[index.row()]=value.toInt();
+        }
+        //emit editCompleted()
+    }
+    return true;
+}
+Qt::ItemFlags Kurs::flags(const QModelIndex &index) const
+{
+    return Qt::ItemIsEditable|Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 }

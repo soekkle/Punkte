@@ -20,3 +20,6 @@ HEADERS  += mainwindow.h \
     kurs.h
 
 FORMS    += mainwindow.ui
+
+OTHER_FILES += \
+    README.md

@@ -4,6 +4,7 @@
 #include <QStandardItemModel>
 #include <QInputDialog>
 #include <QMainWindow>
+#include <QItemSelectionModel>
 
 #include "kurs.h"
 
@@ -28,6 +29,7 @@ private slots:
     void slotClose();
     void slotNeuesBlatt();
     void slotNeuerKurs();
+    void selectionChangedSlot(const  QItemSelection &,const QItemSelection & );
 };
 
 #endif // MAINWINDOW_H
