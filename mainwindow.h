@@ -3,8 +3,11 @@
 
 #include <QStandardItemModel>
 #include <QInputDialog>
+#include <QFileDialog>
 #include <QMainWindow>
 #include <QItemSelectionModel>
+#include <QFile>
+#include <QTextStream>
 
 #include "kurs.h"
 
@@ -21,14 +24,21 @@ public:
     ~MainWindow();
 
 private:
+
+    QString SpeichernDialog();
+    bool Speichern();
+
     Ui::MainWindow *ui;
     QStandardItemModel *Tabelle,*Liste;
     vector<Kurs*> Kurse;
     int Auswahl;
+    QString SpeicherOrt;
 private slots:
     void slotClose();
     void slotNeuesBlatt();
     void slotNeuerKurs();
+    void slotSpeichern();
+    void slotSpeichernunter();
     void selectionChangedSlot(const  QItemSelection &,const QItemSelection & );
 };
 

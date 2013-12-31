@@ -14,9 +14,11 @@ public:
     Kurs(QObject *parent, QString Name);
     void addBlatt(int Max,int Erreicht);
     int anzBlaetter() const;
+    int getBlattErreicht(int Blatt);
+    int getBlattMax(int Blatt);
     QString getName() const;
-    double getVerhalt(int Blatt);
-    double getVerhaltBlatt(int Blatt);
+    double getVerhalt(int Blatt) const;
+    double getVerhaltBlatt(int Blatt)const;
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;

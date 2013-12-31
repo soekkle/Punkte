@@ -23,13 +23,24 @@ int Kurs::anzBlaetter() const
     return a;
 }
 
+int Kurs::getBlattErreicht(int Blatt)
+{
+    return ErPunkte[Blatt];
+}
+
+int Kurs::getBlattMax(int Blatt)
+{
+    return MaxPunkte[Blatt];
+}
+
 QString Kurs::getName() const
 {
     return KursName;
 }
 
-double Kurs::getVerhalt(int Blatt)
+double Kurs::getVerhalt(int Blatt)const
 {
+    ++Blatt;
     if ((Blatt==-1)||(Blatt>anzBlaetter()))
         Blatt=anzBlaetter();
     int Max=0,Erreicht=0;
@@ -41,9 +52,14 @@ double Kurs::getVerhalt(int Blatt)
     return Erreicht/(double)Max;
 }
 
+double Kurs::getVerhaltBlatt(int Blatt) const
+{
+    return ErPunkte[Blatt]/(double)MaxPunkte[Blatt];
+}
+
 int Kurs::columnCount(const QModelIndex & /*parent*/) const
 {
-    return 2;
+    return 4;
 }
 int Kurs::rowCount(const QModelIndex & /*parent*/)const
 {
@@ -58,6 +74,10 @@ QVariant Kurs::data(const QModelIndex &index, int role) const
             return QString("%1").arg(ErPunkte[index.row()]);
         if(index.column()==1)
             return QString("%1").arg(MaxPunkte[index.row()]);
+        if(index.column()==2)
+            return QString("%1 %").arg(getVerhaltBlatt(index.row())*100);
+        if(index.column()==3)
+            return QString("%1 %").arg(getVerhalt(index.row())*100);
      }
     return QVariant();
 }
@@ -71,8 +91,12 @@ QVariant Kurs::headerData(int section, Qt::Orientation orientation, int role) co
         {
             case 0:
                 return QString("Erreichte Punkte");
-             case 1:
+            case 1:
                 return QString("Maximale Punktzahl");
+            case 2:
+                return QString("Prozentual Erreicht");
+            case 3:
+                return QString("Gesamt Prozent");
         }
     }
     return QAbstractTableModel::headerData(section,orientation,role);
@@ -96,5 +120,7 @@ bool Kurs::setData(const QModelIndex &index, const QVariant &value, int role)
 }
 Qt::ItemFlags Kurs::flags(const QModelIndex &index) const
 {
-    return Qt::ItemIsEditable|Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    if (index.column()<2)
+        return Qt::ItemIsEditable|Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    return Qt::ItemIsEnabled;
 }
