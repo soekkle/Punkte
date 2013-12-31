@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushNKurs,SIGNAL(clicked()),this,SLOT(slotNeuerKurs()));
     connect(ui->action_Speichern,SIGNAL(triggered()),this,SLOT(slotSpeichern()));
     connect(ui->actionSpeichern_unter,SIGNAL(triggered()),this,SLOT(slotSpeichernunter()));
+    connect(ui->action_ffnen,SIGNAL(triggered()),this,SLOT(slotLaden()));
     Liste=new QStandardItemModel(0,1,this);
     Liste->setHorizontalHeaderItem(0,new QStandardItem(QString("Name")));
     ui->listView->setModel(Liste);
@@ -28,6 +29,69 @@ MainWindow::~MainWindow()
 void MainWindow::slotClose()
 {
     close();
+}
+
+
+void MainWindow::leeren()
+{
+    for(vector<Kurs*>::const_iterator iter=Kurse.begin();iter!=Kurse.end();++iter)
+    {
+        delete *iter;
+    }
+    Kurse.erase(Kurse.begin(),Kurse.end());
+    Liste->clear();
+}
+bool MainWindow::laden()
+{
+    QFile Datei(SpeicherOrt);
+    if (!Datei.open(QIODevice::ReadOnly | QIODevice::Text))
+             return false;
+    QTextStream Eingabe(&Datei);
+    //int Max=0;
+    QString Zeile=Eingabe.readLine();
+    int Pos=Zeile.indexOf(';');
+    while(-1<Pos)
+    {
+        QString Teil=Zeile.left(Pos);
+        Kurs *Neu=new Kurs(this,Teil);
+        Kurse.push_back(Neu);
+        Liste->appendRow(new QStandardItem(Teil));
+        Zeile=Zeile.right(Zeile.length()-Pos-1);
+        Pos=Zeile.indexOf(';');
+        Zeile=Zeile.right(Zeile.length()-Pos-1);
+        Pos=Zeile.indexOf(';');
+    }
+    while(!Eingabe.atEnd())
+    {
+        Zeile=Eingabe.readLine();
+        Pos=Zeile.indexOf(';');
+        int i=0;
+        do
+        {
+            QString Teil1=Zeile.left(Pos);
+            Zeile=Zeile.right(Zeile.length()-Pos-1);
+            Pos=Zeile.indexOf(';');
+            QString Teil2=Zeile.left(Pos);
+            Zeile=Zeile.right(Zeile.length()-Pos-1);
+            Pos=Zeile.indexOf(';');
+            Kurse[i]->addBlatt(Teil1.toInt(),Teil2.toInt());
+            ++i;
+        }
+        while (-1<Pos);
+    }
+    Datei.close();
+    return true;
+}
+
+
+void MainWindow::slotLaden()
+{
+    QString Path=SpeicherOrt;
+    if (Path=="")
+        Path=QDir::currentPath();
+    SpeicherOrt=QFileDialog::getOpenFileName(this,tr("Punkte Laden"),Path,tr("Tabelle(*.csv)"));
+    leeren();
+    laden();
 }
 
 void MainWindow::slotNeuesBlatt()

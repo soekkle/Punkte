@@ -24,19 +24,22 @@ public:
     ~MainWindow();
 
 private:
-
-    QString SpeichernDialog();
-    bool Speichern();
-
     Ui::MainWindow *ui;
     QStandardItemModel *Tabelle,*Liste;
     vector<Kurs*> Kurse;
     int Auswahl;
     QString SpeicherOrt;
+
+    QString SpeichernDialog();
+    bool Speichern();
+    void leeren();
+    bool laden();
+
 private slots:
     void slotClose();
     void slotNeuesBlatt();
     void slotNeuerKurs();
+    void slotLaden();
     void slotSpeichern();
     void slotSpeichernunter();
     void selectionChangedSlot(const  QItemSelection &,const QItemSelection & );
