@@ -16,6 +16,8 @@ public:
     int anzBlaetter() const;
     int getBlattErreicht(int Blatt);
     int getBlattMax(int Blatt);
+    int getGesammtMaxPunkte() const;
+    int getGesammtErreichtPunkte()const;
     QString getName() const;
     double getVerhalt(int Blatt) const;
     double getVerhaltBlatt(int Blatt)const;
