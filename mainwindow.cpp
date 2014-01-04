@@ -102,8 +102,9 @@ void MainWindow::slotLaden()
     QString Path=SpeicherOrt;
     if (Path=="")
         Path=QDir::currentPath();
-    SpeicherOrt=QFileDialog::getOpenFileName(this,tr("Punkte Laden"),Path,tr("Tabelle(*.csv)"));
+    QString Ort=QFileDialog::getOpenFileName(this,tr("Punkte Laden"),Path,tr("Tabelle(*.csv)"));
     leeren();
+    SpeicherOrt=Ort;
     laden();
 }
 
@@ -117,9 +118,12 @@ void MainWindow::slotNeuesBlatt()
 {
     if ((Auswahl<0)||(Auswahl>=Kurse.size()))
         return;
-    Kurse[Auswahl]->addBlatt(0,0);
+    int Max=0,Erreicht=0;
+    Max=ui->EMaxPunkte->text().toInt();
+    Erreicht=ui->EErPunkte->text().toInt();
+    Kurse[Auswahl]->addBlatt(Max,Erreicht);
     ui->tableView->setModel(NULL);
-     ui->tableView->setModel(Kurse[Auswahl]);
+    ui->tableView->setModel(Kurse[Auswahl]);
 }
 
 void MainWindow::slotNeuerKurs()
@@ -133,7 +137,7 @@ void MainWindow::slotNeuerKurs()
         Kurse.push_back(Neues);
         QStandardItem *neu=new QStandardItem(Name);
         Liste->appendRow(neu);
-        Neues->addBlatt(1,0);
+        //Neues->addBlatt(1,0);
         ui->tableView->setModel(Neues);
         Auswahl=Kurse.size()-1;
     }

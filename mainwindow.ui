@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>508</width>
-    <height>342</height>
+    <width>521</width>
+    <height>272</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -55,11 +55,35 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushNBlatt">
-        <property name="text">
-         <string>Neues Blatt</string>
-        </property>
-       </widget>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="EErPunkte"/>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLineEdit" name="EMaxPunkte"/>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Punkter Erreicht</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Punkte Maximal</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QPushButton" name="pushNBlatt">
+          <property name="text">
+           <string>Neues Blatt</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -70,7 +94,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>508</width>
+     <width>521</width>
      <height>22</height>
     </rect>
    </property>
@@ -92,8 +116,15 @@
     <addaction name="actionNeuer_Kurs"/>
     <addaction name="actionNeues_Blatt"/>
    </widget>
+   <widget class="QMenu" name="menuHilfe">
+    <property name="title">
+     <string>Hilfe</string>
+    </property>
+    <addaction name="action_ber_Punkte"/>
+   </widget>
    <addaction name="menuDatei"/>
    <addaction name="menuBearbeiten"/>
+   <addaction name="menuHilfe"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -139,8 +170,21 @@
     <string>Neues Blatt</string>
    </property>
   </action>
+  <action name="action_ber_Punkte">
+   <property name="text">
+    <string>Über Punkte</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>listView</tabstop>
+  <tabstop>pushNKurs</tabstop>
+  <tabstop>tableView</tabstop>
+  <tabstop>EErPunkte</tabstop>
+  <tabstop>EMaxPunkte</tabstop>
+  <tabstop>pushNBlatt</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
