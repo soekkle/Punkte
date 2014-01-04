@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionSpeichern_unter,SIGNAL(triggered()),this,SLOT(slotSpeichernunter()));
     connect(ui->actionNeu,SIGNAL(triggered()),this,SLOT(slotNeu()));
     connect(ui->action_ffnen,SIGNAL(triggered()),this,SLOT(slotLaden()));
+    connect(ui->action_ber_Punkte,SIGNAL(triggered()),this,SLOT(slotUber()));
+    connect(ui->action_ber_Qt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
     Liste=new QStandardItemModel(0,1,this);
     Liste->setHorizontalHeaderItem(0,new QStandardItem(QString("Name")));
     ui->listView->setModel(Liste);
@@ -202,4 +204,9 @@ bool MainWindow::Speichern()
     }
     Datei.close();
     return true;
+}
+
+void MainWindow::slotUber()
+{
+    QMessageBox::about(this,"Punkte","Diese Anwendung steht unter der GPLv3 Lizenz\n(c) 2014 soekkle\nsoekkle@freenet.de");
 }

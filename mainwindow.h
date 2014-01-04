@@ -9,6 +9,7 @@
 #include <QItemSelectionModel>
 #include <QFile>
 #include <QTextStream>
+#include <QApplication>
 
 #include "kurs.h"
 
@@ -45,6 +46,7 @@ private slots:
     void slotSpeichern();
     void slotSpeichernunter();
     void selectionChangedSlot(const  QItemSelection &,const QItemSelection & );
+    void slotUber();
 };
 
 #endif // MAINWINDOW_H

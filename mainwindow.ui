@@ -121,6 +121,7 @@
      <string>Hilfe</string>
     </property>
     <addaction name="action_ber_Punkte"/>
+    <addaction name="action_ber_Qt"/>
    </widget>
    <addaction name="menuDatei"/>
    <addaction name="menuBearbeiten"/>
@@ -173,6 +174,11 @@
   <action name="action_ber_Punkte">
    <property name="text">
     <string>Über Punkte</string>
+   </property>
+  </action>
+  <action name="action_ber_Qt">
+   <property name="text">
+    <string>Über Qt</string>
    </property>
   </action>
  </widget>
