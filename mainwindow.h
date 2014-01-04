@@ -4,6 +4,7 @@
 #include <QStandardItemModel>
 #include <QInputDialog>
 #include <QFileDialog>
+#include <QMessageBox>
 #include <QMainWindow>
 #include <QItemSelectionModel>
 #include <QFile>
@@ -36,7 +37,8 @@ private:
     bool laden();
 
 private slots:
-    void slotClose();
+    void close();
+    void slotNeu();
     void slotNeuesBlatt();
     void slotNeuerKurs();
     void slotLaden();

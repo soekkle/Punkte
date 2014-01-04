@@ -6,11 +6,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(ui->action_Beenden,SIGNAL(triggered()),this,SLOT(slotClose()));
+    connect(ui->action_Beenden,SIGNAL(triggered()),this,SLOT(close()));
     connect(ui->pushNBlatt,SIGNAL(clicked()),this,SLOT(slotNeuesBlatt()));
     connect(ui->pushNKurs,SIGNAL(clicked()),this,SLOT(slotNeuerKurs()));
     connect(ui->action_Speichern,SIGNAL(triggered()),this,SLOT(slotSpeichern()));
     connect(ui->actionSpeichern_unter,SIGNAL(triggered()),this,SLOT(slotSpeichernunter()));
+    connect(ui->actionNeu,SIGNAL(triggered()),this,SLOT(slotNeu()));
     connect(ui->action_ffnen,SIGNAL(triggered()),this,SLOT(slotLaden()));
     Liste=new QStandardItemModel(0,1,this);
     Liste->setHorizontalHeaderItem(0,new QStandardItem(QString("Name")));
@@ -26,9 +27,19 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::slotClose()
+void MainWindow::close()
 {
-    close();
+    QMessageBox msgBox;
+    msgBox.setText("Das Programm wird Beenden.");
+    msgBox.setInformativeText("Wollen Sie vorm Beenden das Dokument Speichern ?");
+    msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Save);
+    int Aussage=msgBox.exec();
+    if (Aussage==QMessageBox::Cancel)
+        return;
+    if(Aussage==QMessageBox::Save)
+        slotSpeichern();
+    QMainWindow::close();
 }
 
 
@@ -40,6 +51,8 @@ void MainWindow::leeren()
     }
     Kurse.erase(Kurse.begin(),Kurse.end());
     Liste->clear();
+    Auswahl=-1;
+    SpeicherOrt="";
 }
 bool MainWindow::laden()
 {
@@ -94,8 +107,16 @@ void MainWindow::slotLaden()
     laden();
 }
 
+void MainWindow::slotNeu()
+{
+    leeren();
+    return;
+}
+
 void MainWindow::slotNeuesBlatt()
 {
+    if ((Auswahl<0)||(Auswahl>=Kurse.size()))
+        return;
     Kurse[Auswahl]->addBlatt(0,0);
     ui->tableView->setModel(NULL);
      ui->tableView->setModel(Kurse[Auswahl]);
