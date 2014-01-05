@@ -10,18 +10,22 @@ Liste::Liste(QObject *parent):QAbstractTableModel(parent)
 
 Kurs* Liste::addKurs(QString Name)
 {
+    beginInsertRows(QModelIndex(),size()-1,size()-1);
     Kurs* Neues=new Kurs(this,Name);
     Kurse.push_back(Neues);
+    endInsertRows();
     return Neues;
 }
 
 void Liste::clear()
 {
+    beginRemoveRows(QModelIndex(),0,size()-1);
     for(vector<Kurs*>::const_iterator iter=Kurse.begin();iter!=Kurse.end();++iter)
     {
         delete *iter;
     }
     Kurse.erase(Kurse.begin(),Kurse.end());
+    endRemoveRows();
 }
 
 int Liste::columnCount(const QModelIndex &/*parent*/) const
@@ -33,8 +37,8 @@ QVariant Liste::data(const QModelIndex &index, int role) const
 {
     if (role==Qt::DisplayRole)
     {
-        int max=Kurse.size();
-        if (index.row()>max)
+        int max=Kurse.size()+1;
+        if (index.row()<max)
         {
             switch(index.column())
             {

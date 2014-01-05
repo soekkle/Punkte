@@ -15,8 +15,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_ffnen,SIGNAL(triggered()),this,SLOT(slotLaden()));
     connect(ui->action_ber_Punkte,SIGNAL(triggered()),this,SLOT(slotUber()));
     connect(ui->action_ber_Qt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
-    //liste=new Liste(this);
-    //liste->setHorizontalHeaderItem(0,new QStandardItem(QString("Name")));
     ui->listView->setModel(&Kurse);
     Auswahl=-1;
     SpeicherOrt="";
@@ -139,7 +137,7 @@ void MainWindow::slotNeuerKurs()
 void MainWindow::selectionChangedSlot(const QItemSelection& neu  , const QItemSelection & )
 {
     QString Index=neu.indexes().first().data().toString();
-    for (size_t i=0;i<Kurse.size();++i)
+    for (int i=0;i<Kurse.size();++i)
     {
         if(Kurse[i]->getName()==Index)
             Auswahl=i;
@@ -171,7 +169,7 @@ bool MainWindow::Speichern()
              return false;
     QTextStream Ausgabe(&Datei);
     int Max=0;
-    for(size_t i=0;i<Kurse.size();++i)
+    for(int i=0;i<Kurse.size();++i)
     {
         int anz=Kurse[i]->anzBlaetter();
         if(Max<anz)
@@ -181,7 +179,7 @@ bool MainWindow::Speichern()
     Ausgabe<<endl;
     for(int i=0;i<Max;++i)
     {
-        for(size_t ii=0;ii<Kurse.size();++ii)
+        for(int ii=0;ii<Kurse.size();++ii)
         {
             int anz=Kurse[ii]->anzBlaetter();
             if(i<anz)
