@@ -7,10 +7,12 @@ Kurs::Kurs(QObject *parent, QString Name):QAbstractTableModel(parent)
 
 void Kurs::addBlatt(int Max,int Erreicht)
 {
+    beginInsertRows(QModelIndex(),anzBlaetter()-1,anzBlaetter()-1);
     MaxPunkte.push_back(Max);
     ErPunkte.push_back(Erreicht);
     QModelIndex topLeft=createIndex(0,0),bottomRight=createIndex(anzBlaetter(),1);
-    emit dataChanged(topLeft,bottomRight);
+    endInsertRows();
+    //emit dataChanged(topLeft,bottomRight);
 }
 
 int Kurs::anzBlaetter() const

@@ -124,8 +124,6 @@ void MainWindow::slotNeuesBlatt()
     Max=ui->EMaxPunkte->text().toInt();
     Erreicht=ui->EErPunkte->text().toInt();
     Kurse[Auswahl]->addBlatt(Max,Erreicht);
-    ui->tableView->setModel(NULL);
-    ui->tableView->setModel(Kurse[Auswahl]);
 }
 
 void MainWindow::slotNeuerKurs()
@@ -170,7 +168,10 @@ void MainWindow::slotSpeichernunter()
 }
 QString MainWindow::SpeichernDialog()
 {
-    return QFileDialog::getSaveFileName(this,tr("Punkte Speichern"),QDir::currentPath(),tr("Tabelle(*.csv)"));
+    QString Datei=QFileDialog::getSaveFileName(this,tr("Punkte Speichern"),QDir::currentPath(),tr("Tabelle(*.csv)"));
+    if (Datei.right(4)!=".csv")
+        Datei+=".csv";
+    return Datei;
 }
 
 bool MainWindow::Speichern()
