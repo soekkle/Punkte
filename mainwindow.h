@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QStandardItemModel>
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -12,6 +11,7 @@
 #include <QApplication>
 
 #include "kurs.h"
+#include "liste.h"
 
 namespace Ui {
 class MainWindow;
@@ -27,8 +27,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QStandardItemModel *Tabelle,*Liste;
-    vector<Kurs*> Kurse;
+    Liste Kurse;
     int Auswahl;
     QString SpeicherOrt;
 

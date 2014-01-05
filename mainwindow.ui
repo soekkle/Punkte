@@ -18,16 +18,16 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QListView" name="listView">
+       <widget class="QTableView" name="listView">
         <property name="maximumSize">
          <size>
           <width>231</width>
           <height>16777215</height>
          </size>
         </property>
-        <property name="viewMode">
-         <enum>QListView::ListMode</enum>
-        </property>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
        </widget>
       </item>
       <item>

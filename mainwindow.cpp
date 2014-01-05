@@ -15,9 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_ffnen,SIGNAL(triggered()),this,SLOT(slotLaden()));
     connect(ui->action_ber_Punkte,SIGNAL(triggered()),this,SLOT(slotUber()));
     connect(ui->action_ber_Qt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
-    Liste=new QStandardItemModel(0,1,this);
-    Liste->setHorizontalHeaderItem(0,new QStandardItem(QString("Name")));
-    ui->listView->setModel(Liste);
+    ui->listView->setModel(&Kurse);
     Auswahl=-1;
     SpeicherOrt="";
     connect(ui->listView->selectionModel(),SIGNAL(selectionChanged(QItemSelection ,QItemSelection )),
@@ -47,12 +45,7 @@ void MainWindow::close()
 
 void MainWindow::leeren()
 {
-    for(vector<Kurs*>::const_iterator iter=Kurse.begin();iter!=Kurse.end();++iter)
-    {
-        delete *iter;
-    }
-    Kurse.erase(Kurse.begin(),Kurse.end());
-    Liste->clear();
+    Kurse.clear();
     Auswahl=-1;
     SpeicherOrt="";
 }
@@ -68,11 +61,11 @@ bool MainWindow::laden()
     while(-1<Pos)
     {
         QString Teil=Zeile.left(Pos);
-        Kurs *Neu=new Kurs(this,Teil);
-        Kurse.push_back(Neu);
-        Liste->appendRow(new QStandardItem(Teil));
+        Kurs* Neu=Kurse.addKurs(Teil);
         Zeile=Zeile.right(Zeile.length()-Pos-1);
         Pos=Zeile.indexOf(';');
+        Teil=Zeile.left(Pos);
+        Neu->setFarbe(Teil.toInt());
         Zeile=Zeile.right(Zeile.length()-Pos-1);
         Pos=Zeile.indexOf(';');
     }
@@ -133,11 +126,7 @@ void MainWindow::slotNeuerKurs()
                                        tr("Kursname:"), QLineEdit::Normal,"", &OK);
     if(OK)
     {
-        Kurs* Neues=new Kurs(this,Name);
-        Kurse.push_back(Neues);
-        QStandardItem *neu=new QStandardItem(Name);
-        Liste->appendRow(neu);
-        //Neues->addBlatt(1,0);
+        Kurs* Neues=Kurse.addKurs(Name);
         ui->tableView->setModel(Neues);
         Auswahl=Kurse.size()-1;
     }
@@ -146,7 +135,7 @@ void MainWindow::slotNeuerKurs()
 void MainWindow::selectionChangedSlot(const QItemSelection& neu  , const QItemSelection & )
 {
     QString Index=neu.indexes().first().data().toString();
-    for (size_t i=0;i<Kurse.size();++i)
+    for (int i=0;i<Kurse.size();++i)
     {
         if(Kurse[i]->getName()==Index)
             Auswahl=i;
@@ -181,17 +170,17 @@ bool MainWindow::Speichern()
              return false;
     QTextStream Ausgabe(&Datei);
     int Max=0;
-    for(size_t i=0;i<Kurse.size();++i)
+    for(int i=0;i<Kurse.size();++i)
     {
         int anz=Kurse[i]->anzBlaetter();
         if(Max<anz)
             Max=anz;
-        Ausgabe<<Kurse[i]->getName()<<";"<<anz<<";";
+        Ausgabe<<Kurse[i]->getName()<<";"<<Kurse[i]->getFarbe()<<";";
     }
     Ausgabe<<endl;
     for(int i=0;i<Max;++i)
     {
-        for(size_t ii=0;ii<Kurse.size();++ii)
+        for(int ii=0;ii<Kurse.size();++ii)
         {
             int anz=Kurse[ii]->anzBlaetter();
             if(i<anz)

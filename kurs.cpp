@@ -3,6 +3,7 @@
 Kurs::Kurs(QObject *parent, QString Name):QAbstractTableModel(parent)
 {
     KursName=Name;
+    Farbe=0;
 }
 
 void Kurs::addBlatt(int Max,int Erreicht)
@@ -33,6 +34,11 @@ int Kurs::getBlattErreicht(int Blatt)
 int Kurs::getBlattMax(int Blatt)
 {
     return MaxPunkte[Blatt];
+}
+
+int Kurs::getFarbe()
+{
+    return Farbe;
 }
 
 int Kurs::getGesammtErreichtPunkte() const
@@ -164,4 +170,9 @@ Qt::ItemFlags Kurs::flags(const QModelIndex &index) const
     if ((index.column()<2)&&(index.row()<anzBlaetter()))
         return Qt::ItemIsEditable|Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     return Qt::ItemIsEnabled;
+}
+
+void Kurs::setFarbe(int Farbe)
+{
+    this->Farbe=Farbe&0xffffff;
 }
