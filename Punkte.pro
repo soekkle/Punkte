@@ -15,13 +15,16 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     kurs.cpp \
-    liste.cpp
+    liste.cpp \
+    neuerkurseingabe.cpp
 
 HEADERS  += mainwindow.h \
     kurs.h \
-    liste.h
+    liste.h \
+    neuerkurseingabe.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    neuerkurseingabe.ui
 
 OTHER_FILES += \
     README.md

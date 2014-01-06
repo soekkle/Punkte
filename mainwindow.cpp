@@ -7,7 +7,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(ui->action_Beenden,SIGNAL(triggered()),this,SLOT(close()));
+    connect(ui->actionNeues_Blatt,SIGNAL(triggered()),this,SLOT(slotNeuesBlatt()));
     connect(ui->pushNBlatt,SIGNAL(clicked()),this,SLOT(slotNeuesBlatt()));
+    connect(ui->actionNeuer_Kurs,SIGNAL(triggered()),this,SLOT(slotNeuerKurs()));
     connect(ui->pushNKurs,SIGNAL(clicked()),this,SLOT(slotNeuerKurs()));
     connect(ui->action_Speichern,SIGNAL(triggered()),this,SLOT(slotSpeichern()));
     connect(ui->actionSpeichern_unter,SIGNAL(triggered()),this,SLOT(slotSpeichernunter()));
@@ -96,7 +98,7 @@ void MainWindow::slotFarbe()
 {
     if ((Auswahl<0)||(Auswahl>=Kurse.size()))
         return;
-    Kurse[Auswahl]->setQFarbe(QColorDialog::getColor(Qt::red,this,"Kurs Farbe"));
+    Kurse[Auswahl]->setQFarbe(QColorDialog::getColor(Kurse[Auswahl]->getQColor(),this,"Kurs Farbe"));
 }
 
 void MainWindow::slotLaden()
@@ -131,11 +133,12 @@ void MainWindow::slotNeuesBlatt()
 void MainWindow::slotNeuerKurs()
 {
     bool OK;
-    QString Name=QInputDialog::getText(this, tr("QInputDialog::getText()"),
-                                       tr("Kursname:"), QLineEdit::Normal,"", &OK);
+    QColor Farbe;
+    QString Name=NeuerKursEingabe::GetNeuerKurs(this,&Farbe,&OK);
     if(OK)
     {
         Kurs* Neues=Kurse.addKurs(Name);
+        Neues->setQFarbe(Farbe);
         ui->tableView->setModel(Neues);
         Auswahl=Kurse.size()-1;
     }

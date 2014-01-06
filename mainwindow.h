@@ -11,10 +11,10 @@
 #include <QFile>
 #include <QTextStream>
 #include <QApplication>
-#include <QColorDialog>
 
 #include "kurs.h"
 #include "liste.h"
+#include "neuerkurseingabe.h"
 
 namespace Ui {
 class MainWindow;
