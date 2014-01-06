@@ -30,7 +30,7 @@ void Liste::clear()
 
 int Liste::columnCount(const QModelIndex &/*parent*/) const
 {
-    return 1;
+    return 2;
 }
 
 QVariant Liste::data(const QModelIndex &index, int role) const
@@ -44,11 +44,19 @@ QVariant Liste::data(const QModelIndex &index, int role) const
             {
                 case 0:
                     return Kurse[index.row()]->getName();
-                /*case 1:
-                    return Kurse[index.row()]->getFarbe();*/
+                case 1:
+                    return QString::number(Kurse[index.row()]->getFarbe(),16);
             }
         }
     }
+    if (role==Qt::BackgroundColorRole)
+    {
+        if (index.column()==1)
+        {
+            return Kurse[index.row()]->getQColor();
+        }
+    }
+
     return QVariant();
 }
 

@@ -66,6 +66,15 @@ QString Kurs::getName() const
     return KursName;
 }
 
+QColor Kurs::getQColor()
+{
+    int r,g,b;
+    r=(Farbe&0xff0000)>>16;
+    g=(Farbe&0x00ff00)>>8;
+    b=(Farbe&0x0000ff);
+    return QColor(r,g,b);
+}
+
 double Kurs::getVerhalt(int Blatt)const
 {
     ++Blatt;
@@ -175,4 +184,11 @@ Qt::ItemFlags Kurs::flags(const QModelIndex &index) const
 void Kurs::setFarbe(int Farbe)
 {
     this->Farbe=Farbe&0xffffff;
+}
+
+void Kurs::setQFarbe(QColor Farbe)
+{
+    int r,g,b;
+    Farbe.getRgb(&r,&g,&b);
+    this->Farbe=(r<<16)|(g<<8)|b;
 }

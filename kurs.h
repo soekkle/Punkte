@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <QString>
+#include <QColor>
 #include <QAbstractTableModel>
 
 using namespace std;
@@ -20,6 +21,7 @@ public:
     int getGesammtMaxPunkte() const;
     int getGesammtErreichtPunkte()const;
     QString getName() const;
+    QColor getQColor();
     double getVerhalt(int Blatt) const;
     double getVerhaltBlatt(int Blatt)const;
     int rowCount(const QModelIndex &parent) const;
@@ -29,6 +31,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
     Qt::ItemFlags flags(const QModelIndex &index) const;
     void setFarbe(int Farbe);
+    void setQFarbe(QColor Farbe);
 private:
     QString KursName;
     vector<int>ErPunkte;

@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <iostream>
+
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -12,6 +14,7 @@
 
 #include "kurs.h"
 #include "liste.h"
+#include "neuerkurseingabe.h"
 
 namespace Ui {
 class MainWindow;
@@ -39,6 +42,7 @@ private:
 private slots:
     void close();
     void slotNeu();
+    void slotFarbe();
     void slotNeuesBlatt();
     void slotNeuerKurs();
     void slotLaden();

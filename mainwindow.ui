@@ -25,6 +25,9 @@
           <height>16777215</height>
          </size>
         </property>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
         <attribute name="verticalHeaderVisible">
          <bool>false</bool>
         </attribute>
@@ -115,6 +118,8 @@
     </property>
     <addaction name="actionNeuer_Kurs"/>
     <addaction name="actionNeues_Blatt"/>
+    <addaction name="separator"/>
+    <addaction name="actionFarbe_W_hlen"/>
    </widget>
    <widget class="QMenu" name="menuHilfe">
     <property name="title">
@@ -179,6 +184,11 @@
   <action name="action_ber_Qt">
    <property name="text">
     <string>Über Qt</string>
+   </property>
+  </action>
+  <action name="actionFarbe_W_hlen">
+   <property name="text">
+    <string>Farbe Wählen</string>
    </property>
   </action>
  </widget>
