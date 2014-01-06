@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <iostream>
+
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -9,6 +11,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QApplication>
+#include <QColorDialog>
 
 #include "kurs.h"
 #include "liste.h"
@@ -39,6 +42,7 @@ private:
 private slots:
     void close();
     void slotNeu();
+    void slotFarbe();
     void slotNeuesBlatt();
     void slotNeuerKurs();
     void slotLaden();

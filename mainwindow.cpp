@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_ffnen,SIGNAL(triggered()),this,SLOT(slotLaden()));
     connect(ui->action_ber_Punkte,SIGNAL(triggered()),this,SLOT(slotUber()));
     connect(ui->action_ber_Qt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
+    connect(ui->actionFarbe_W_hlen,SIGNAL(triggered()),this,SLOT(slotFarbe()));
     ui->listView->setModel(&Kurse);
     Auswahl=-1;
     SpeicherOrt="";
@@ -42,13 +43,13 @@ void MainWindow::close()
     QMainWindow::close();
 }
 
-
 void MainWindow::leeren()
 {
     Kurse.clear();
     Auswahl=-1;
     SpeicherOrt="";
 }
+
 bool MainWindow::laden()
 {
     QFile Datei(SpeicherOrt);
@@ -91,6 +92,12 @@ bool MainWindow::laden()
     return true;
 }
 
+void MainWindow::slotFarbe()
+{
+    if ((Auswahl<0)||(Auswahl>=Kurse.size()))
+        return;
+    Kurse[Auswahl]->setQFarbe(QColorDialog::getColor(Qt::red,this,"Kurs Farbe"));
+}
 
 void MainWindow::slotLaden()
 {
@@ -136,12 +143,9 @@ void MainWindow::slotNeuerKurs()
 
 void MainWindow::selectionChangedSlot(const QItemSelection& neu  , const QItemSelection & )
 {
-    QString Index=neu.indexes().first().data().toString();
-    for (int i=0;i<Kurse.size();++i)
-    {
-        if(Kurse[i]->getName()==Index)
-            Auswahl=i;
-    }
+    if (neu.isEmpty())
+        return;
+    Auswahl=neu.indexes().first().row();
     ui->tableView->setModel(Kurse[Auswahl]);
 }
 
