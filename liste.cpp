@@ -45,7 +45,8 @@ QVariant Liste::data(const QModelIndex &index, int role) const
                 case 0:
                     return Kurse[index.row()]->getName();
                 case 1:
-                    return QString::number(Kurse[index.row()]->getFarbe(),16);
+                return Kurse[index.row()]->getQColor().name();
+                    //return QString::number(Kurse[index.row()]->getFarbe(),16);
             }
         }
     }

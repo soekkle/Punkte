@@ -66,6 +66,7 @@ QString Kurs::getName() const
     return KursName;
 }
 
+//!Gibt die Kursfarbe Als QColorobjekt zurück.
 QColor Kurs::getQColor()
 {
     int r,g,b;
@@ -75,6 +76,7 @@ QColor Kurs::getQColor()
     return QColor(r,g,b);
 }
 
+//!Liefert das Verhaltnis von Gesamt zu den Erreichten Punkten von Blatto bis Einschließlich Blatt n-1.
 double Kurs::getVerhalt(int Blatt)const
 {
     ++Blatt;
@@ -128,6 +130,13 @@ QVariant Kurs::data(const QModelIndex &index, int role) const
         if(index.column()==3)
             return QString("%1 %").arg(getVerhalt(index.row())*100);
      }
+    if (role==Qt::BackgroundColorRole)
+    {
+        if (index.row()%2==0)
+        {
+            return QColor(207,207,207);//Färbt jede Zeite Reihe ein.
+        }
+    }
     return QVariant();
 }
 
