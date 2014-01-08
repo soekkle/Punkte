@@ -18,6 +18,9 @@ public:
     static QString GetNeuerKurs(QWidget *parent, QColor *Farbe, bool *Ok);
 
 private:
+
+    static QColor nextColor();
+    static int nextColorint;
     Ui::NeuerKursEingabe *ui;
     bool Erfolgreich;
     QColor Farbwahl;
