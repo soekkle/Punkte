@@ -6,4 +6,4 @@ Lizenz
 Das Programm ist mit der GPLv3 lizensiert
 Autor
 -----
-soekkle@freenet.de
+soekkle
