@@ -110,6 +110,8 @@
     <addaction name="action_Speichern"/>
     <addaction name="actionSpeichern_unter"/>
     <addaction name="separator"/>
+    <addaction name="actionDiagramm_anzeigen"/>
+    <addaction name="separator"/>
     <addaction name="action_Beenden"/>
    </widget>
    <widget class="QMenu" name="menuBearbeiten">
@@ -145,6 +147,9 @@
    <property name="text">
     <string>&amp;Neu</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="action_ffnen">
    <property name="text">
@@ -154,6 +159,9 @@
   <action name="action_Speichern">
    <property name="text">
     <string>&amp;Speichern</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionSpeichern_unter">
@@ -165,6 +173,9 @@
    <property name="text">
     <string>&amp;Beenden</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
   </action>
   <action name="actionNeuer_Kurs">
    <property name="text">
@@ -174,6 +185,9 @@
   <action name="actionNeues_Blatt">
    <property name="text">
     <string>Neues Blatt</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
    </property>
   </action>
   <action name="action_ber_Punkte">
@@ -189,6 +203,17 @@
   <action name="actionFarbe_W_hlen">
    <property name="text">
     <string>Farbe Wählen</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionDiagramm_anzeigen">
+   <property name="text">
+    <string>Diagramm anzeigen</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
   </action>
  </widget>
