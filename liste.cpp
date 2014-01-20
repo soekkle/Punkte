@@ -17,6 +17,11 @@ Kurs* Liste::addKurs(QString Name)
     return Neues;
 }
 
+vector<Kurs*>::const_iterator Liste::begin()
+{
+    return Kurse.begin();
+}
+
 void Liste::clear()
 {
     beginRemoveRows(QModelIndex(),0,size()-1);
@@ -59,6 +64,11 @@ QVariant Liste::data(const QModelIndex &index, int role) const
     }
 
     return QVariant();
+}
+
+vector<Kurs*>::const_iterator Liste::end()
+{
+    return Kurse.end();
 }
 
 QVariant Liste::headerData(int section, Qt::Orientation orientation, int role) const
