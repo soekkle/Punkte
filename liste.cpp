@@ -105,3 +105,15 @@ int Liste::size()
 {
     return Kurse.size();
 }
+
+int Liste::maxBlatter()
+{
+    int max=0;
+    for (vector<Kurs*>::const_iterator iter=begin();iter!=end();++iter)
+    {
+        Kurs* Element=*iter;
+        if (max<Element->anzBlaetter())
+            max=(Element->anzBlaetter());
+    }
+    return max;
+}

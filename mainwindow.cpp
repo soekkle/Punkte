@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     SpeicherOrt="";
     connect(ui->listView->selectionModel(),SIGNAL(selectionChanged(QItemSelection ,QItemSelection )),
             this,SLOT(selectionChangedSlot(QItemSelection ,QItemSelection )));
+    Graphik.setListe(&Kurse);
 }
 
 MainWindow::~MainWindow()

@@ -17,8 +17,10 @@ class Diagramm : public QWidget
 public:
     explicit Diagramm(QWidget *parent = 0);
     ~Diagramm();
+    void setListe(Liste* newListe);
 public slots:
     void DatenGeaendert();
+    void resize(int w, int h);
     void show();
 private:
     Ui::Diagramm *ui;

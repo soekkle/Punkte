@@ -18,6 +18,7 @@ public:
     Kurs* operator [](int i);
     int rowCount(const QModelIndex &) const;
     int size();
+    int maxBlatter();
 private:
     vector<Kurs*> Kurse;
 };
