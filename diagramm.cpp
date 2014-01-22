@@ -17,6 +17,12 @@ Diagramm::~Diagramm()
     delete ui;
 }
 
+void Diagramm::close()
+{
+    delete Zeichnung;
+    offen=false;
+}
+
 void Diagramm::DatenGeaendert()
 {
     zeichnen();
@@ -51,15 +57,17 @@ void Diagramm::zeichnen()
 {
     if (Kurse==NULL)
         return;
+    if (offen)
+        delete Zeichnung;
     Zeichnung=new QGraphicsScene(this);
     ui->graphicsView->setScene(Zeichnung);
-    Zeichnung->addLine(50,50,50,Hoehe);
+    Zeichnung->addLine(50,25,50,Hoehe);
     Zeichnung->addLine(50,Hoehe,Breite,Hoehe);
     Zeichnung->addLine(50,Hoehe,Breite,Hoehe);
     Zeichnung->addLine(Breite-15,Hoehe-15,Breite,Hoehe);
     Zeichnung->addLine(Breite-15,Hoehe+15,Breite,Hoehe);
-    Zeichnung->addLine(35,65,50,50);
-    Zeichnung->addLine(65,65,50,50);
+    Zeichnung->addLine(35,35,50,25);
+    Zeichnung->addLine(65,35,50,25);
     int Blatter=Kurse->maxBlatter()+1;
     int Schritt=(Breite-15)/Blatter;
     for (int i=1;i<=Blatter;++i)
@@ -72,8 +80,9 @@ void Diagramm::zeichnen()
         QPolygonF Linie;
         for (int i=0;i<Element->anzBlaetter();++i)
         {
-            Linie.append(QPointF((i+1)*Schritt,Hoehe*(1-Element->getVerhalt(i))));
+            Linie.append(QPointF((i+1)*Schritt,(Hoehe-25)*(1-Element->getVerhalt(i))));
         }
-        Zeichnung->addPolygon(Linie);
+        QPen Farbe(Element->getQColor());
+        Zeichnung->addPolygon(Linie,Farbe);
     }
 }

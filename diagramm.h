@@ -19,6 +19,7 @@ public:
     ~Diagramm();
     void setListe(Liste* newListe);
 public slots:
+    void close();
     void DatenGeaendert();
     void resize(int w, int h);
     void show();
