@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+#include <QCloseEvent>
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -28,6 +29,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    void closeEvent( QCloseEvent *event );
+
 private:
     Ui::MainWindow *ui;
     Liste Kurse;
@@ -40,13 +44,12 @@ private:
     bool laden();
 
 private slots:
-    void close();
     void slotNeu();
     void slotFarbe();
     void slotNeuesBlatt();
     void slotNeuerKurs();
     void slotLaden();
-    void slotSpeichern();
+    bool slotSpeichern();
     void slotSpeichernunter();
     void selectionChangedSlot(const  QItemSelection &,const QItemSelection & );
     void slotUber();

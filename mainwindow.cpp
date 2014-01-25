@@ -30,7 +30,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::close()
+void MainWindow::closeEvent( QCloseEvent *event )
 {
     QMessageBox msgBox;
     msgBox.setText("Das Programm wird Beenden.");
@@ -39,10 +39,10 @@ void MainWindow::close()
     msgBox.setDefaultButton(QMessageBox::Save);
     int Aussage=msgBox.exec();
     if (Aussage==QMessageBox::Cancel)
-        return;
+        event->ignore();
     if(Aussage==QMessageBox::Save)
         slotSpeichern();
-    QMainWindow::close();
+    event->accept();
 }
 
 void MainWindow::leeren()
@@ -150,11 +150,11 @@ void MainWindow::selectionChangedSlot(const QItemSelection& neu  , const QItemSe
     ui->tableView->setModel(Kurse[Auswahl]);
 }
 
-void MainWindow::slotSpeichern()
+bool MainWindow::slotSpeichern()
 {
     if (SpeicherOrt=="")
         SpeicherOrt=SpeichernDialog();
-    Speichern();
+    return Speichern();
 }
 
 void MainWindow::slotSpeichernunter()
@@ -172,6 +172,8 @@ QString MainWindow::SpeichernDialog()
 
 bool MainWindow::Speichern()
 {
+    if (SpeicherOrt=="")
+        return false;
     QFile Datei(SpeicherOrt);
     if (!Datei.open(QIODevice::WriteOnly | QIODevice::Text))
              return false;
