@@ -17,10 +17,11 @@ Diagramm::~Diagramm()
     delete ui;
 }
 
-void Diagramm::close()
+void Diagramm::closeEvent(QCloseEvent *event)
 {
     delete Zeichnung;
     offen=false;
+    event->accept();
 }
 
 void Diagramm::DatenGeaendert()
@@ -28,12 +29,14 @@ void Diagramm::DatenGeaendert()
     zeichnen();
 }
 
-void Diagramm::resize(int w, int h)
+void Diagramm::resizeEvent(QResizeEvent *)
 {
-
-    Breite=ui->graphicsView->width();
-    Hoehe=ui->graphicsView->height();
-    zeichnen();
+    if (offen)
+    {
+        Breite=ui->graphicsView->width()-15;
+        Hoehe=ui->graphicsView->height()-15;
+        zeichnen();
+    }
 }
 
 void Diagramm::setListe(Liste *newListe)

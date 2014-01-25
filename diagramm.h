@@ -2,6 +2,7 @@
 #define DIAGRAMM_H
 
 #include <QWidget>
+#include <QCloseEvent>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include "liste.h"
@@ -19,10 +20,11 @@ public:
     ~Diagramm();
     void setListe(Liste* newListe);
 public slots:
-    void close();
     void DatenGeaendert();
-    void resize(int w, int h);
     void show();
+protected:
+    void closeEvent(QCloseEvent *event);
+    void resizeEvent(QResizeEvent *event);
 private:
     Ui::Diagramm *ui;
     int Breite;
