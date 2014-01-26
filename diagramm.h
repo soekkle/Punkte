@@ -34,6 +34,7 @@ private:
     QGraphicsScene *Zeichnung;
 
     void zeichnen();
+    void zeichneXAchse(int x,int y,int Lange,int Elemente);
 };
 
 #endif // DIAGRAMM_H
