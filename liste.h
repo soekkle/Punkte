@@ -9,13 +9,16 @@ public:
     Liste();
     Liste(QObject *parent);
     Kurs *addKurs(QString Name);
+    vector<Kurs*>::const_iterator begin();
     void clear();
     int columnCount(const QModelIndex &/*parent*/) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    vector<Kurs*>::const_iterator end();
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     Kurs* operator [](int i);
     int rowCount(const QModelIndex &) const;
     int size();
+    int maxBlatter();
 private:
     vector<Kurs*> Kurse;
 };

@@ -17,6 +17,11 @@ Kurs* Liste::addKurs(QString Name)
     return Neues;
 }
 
+vector<Kurs*>::const_iterator Liste::begin()
+{
+    return Kurse.begin();
+}
+
 void Liste::clear()
 {
     beginRemoveRows(QModelIndex(),0,size()-1);
@@ -61,6 +66,11 @@ QVariant Liste::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+vector<Kurs*>::const_iterator Liste::end()
+{
+    return Kurse.end();
+}
+
 QVariant Liste::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role==Qt::DisplayRole)
@@ -94,4 +104,16 @@ int Liste::rowCount(const QModelIndex &/*parent*/) const
 int Liste::size()
 {
     return Kurse.size();
+}
+
+int Liste::maxBlatter()
+{
+    int max=0;
+    for (vector<Kurs*>::const_iterator iter=begin();iter!=end();++iter)
+    {
+        Kurs* Element=*iter;
+        if (max<Element->anzBlaetter())
+            max=(Element->anzBlaetter());
+    }
+    return max;
 }

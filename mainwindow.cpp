@@ -18,11 +18,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_ber_Punkte,SIGNAL(triggered()),this,SLOT(slotUber()));
     connect(ui->action_ber_Qt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
     connect(ui->actionFarbe_W_hlen,SIGNAL(triggered()),this,SLOT(slotFarbe()));
+    connect(ui->actionDiagramm_anzeigen,SIGNAL(triggered()),&Graphik,SLOT(show()));
     ui->listView->setModel(&Kurse);
     Auswahl=-1;
     SpeicherOrt="";
     connect(ui->listView->selectionModel(),SIGNAL(selectionChanged(QItemSelection ,QItemSelection )),
             this,SLOT(selectionChangedSlot(QItemSelection ,QItemSelection )));
+    Graphik.setListe(&Kurse);
 }
 
 MainWindow::~MainWindow()
