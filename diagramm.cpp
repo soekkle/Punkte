@@ -17,6 +17,17 @@ Diagramm::~Diagramm()
     delete ui;
 }
 
+int Diagramm::anzSchritte(int Stuffen, int Lange, float *Schritt)
+{
+    *Schritt=Lange/Stuffen;
+    while ((*Schritt<25)&&(Stuffen>10))//Der wert muss noch angpasst werden.
+    {
+        Stuffen=Stuffen/10;
+        *Schritt=Lange/Stuffen;
+    }
+    return Stuffen;
+}
+
 void Diagramm::closeEvent(QCloseEvent *event)
 {
     delete Zeichnung;
@@ -64,11 +75,8 @@ void Diagramm::zeichnen()
         delete Zeichnung;
     Zeichnung=new QGraphicsScene(this);
     ui->graphicsView->setScene(Zeichnung);
-    Zeichnung->addLine(50,25,50,Hoehe);
-    Zeichnung->addLine(50,Hoehe,Breite,Hoehe);
-    Zeichnung->addLine(35,35,50,25);
-    Zeichnung->addLine(65,35,50,25);
     int Blatter=Kurse->maxBlatter()-1;
+    zeichneYAchse(50,25,Hoehe-25);
     zeichneXAchse(50,Hoehe,Breite-50,Blatter);
     int Schritt=(Breite-50)/Blatter;
 
@@ -92,19 +100,40 @@ void Diagramm::zeichnen()
 void Diagramm::zeichneXAchse(int x, int y, int Lange, int Elemente)
 {
     Zeichnung->addLine(x,y,x+Lange,y);
-    Zeichnung->addLine(x+Lange-15,y-15,x+Lange,y);
-    Zeichnung->addLine(x+Lange-15,y+15,x+Lange,y);
-    int Schritt=(Lange)/Elemente;
+    /*Zeichnung->addLine(x+Lange-15,y-15,x+Lange,y);
+    Zeichnung->addLine(x+Lange-15,y+15,x+Lange,y);*/
     QGraphicsTextItem * Text = new QGraphicsTextItem;//Objekt für die Texte der Legende.
     Text->setPos(x,y+10);
     Text->setPlainText("1");
     Zeichnung->addItem(Text);
-    for (int i=1;i<=Elemente;++i)
+    float Weite=0;
+    int Anz=anzSchritte(Elemente,Lange,&Weite);
+    int EleSchritt=Elemente/Anz;
+    for (int i=1;i<=Anz;++i)
     {
-        Zeichnung->addLine(i*Schritt+x,y+15,i*Schritt+x,y-15);
+        Zeichnung->addLine(i*Weite+x,y+15,i*Weite+x,y-15);
         Text =new QGraphicsTextItem;
-        Text->setPlainText(QString("%1").arg(i+1));
-        Text->setPos(i*Schritt+x,y+10);
+        Text->setPlainText(QString("%1").arg(i*EleSchritt+1));
+        Text->setPos(i*Weite+x,y+10);
+        Zeichnung->addItem(Text);
+    }
+}
+
+void Diagramm::zeichneYAchse(int x, int y, int Lange)
+{
+    Zeichnung->addLine(x,y,x,y+Lange);
+    /*Zeichnung->addLine(x-15,y+15,x,y);
+    Zeichnung->addLine(x+15,y+15,x,y);*/
+    float Weite=0;
+    int Anz=anzSchritte(100,Lange,&Weite);
+    int proSchritt=100/Anz;
+    for (int i=0;i<Anz;++i)
+    {
+        float yPos=y+Lange-((i+1)*Weite);
+        Zeichnung->addLine(x-15,yPos,x+15,yPos);
+        QGraphicsTextItem * Text = new QGraphicsTextItem;//Objekt für die Texte der Legende.
+        Text->setPos(x-40,yPos);
+        Text->setPlainText(QString("%1%").arg((i+1)*proSchritt));
         Zeichnung->addItem(Text);
     }
 }

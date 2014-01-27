@@ -32,9 +32,10 @@ private:
     Liste* Kurse;
     bool offen;
     QGraphicsScene *Zeichnung;
-
+    int anzSchritte(int Stuffen,int Lange,float *Schritt);
     void zeichnen();
     void zeichneXAchse(int x,int y,int Lange,int Elemente);
+    void zeichneYAchse(int x,int y,int Lange);
 };
 
 #endif // DIAGRAMM_H
