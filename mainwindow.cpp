@@ -41,9 +41,14 @@ void MainWindow::closeEvent( QCloseEvent *event )
     msgBox.setDefaultButton(QMessageBox::Save);
     int Aussage=msgBox.exec();
     if (Aussage==QMessageBox::Cancel)
+    {
         event->ignore();
+        return;
+    }
     if(Aussage==QMessageBox::Save)
-        slotSpeichern();
+        if (!slotSpeichern())
+            event->ignore();
+    Graphik.close();
     event->accept();
 }
 
@@ -101,6 +106,7 @@ void MainWindow::slotFarbe()
     if ((Auswahl<0)||(Auswahl>=Kurse.size()))
         return;
     Kurse[Auswahl]->setQFarbe(QColorDialog::getColor(Kurse[Auswahl]->getQColor(),this,"Kurs Farbe"));
+    Graphik.DatenGeaendert();
 }
 
 void MainWindow::slotLaden()
@@ -128,6 +134,7 @@ void MainWindow::slotNeuesBlatt()
     Max=ui->EMaxPunkte->text().toInt();
     Erreicht=ui->EErPunkte->text().toInt();
     Kurse[Auswahl]->addBlatt(Max,Erreicht);
+    Graphik.DatenGeaendert();
 }
 
 void MainWindow::slotNeuerKurs()
@@ -141,6 +148,7 @@ void MainWindow::slotNeuerKurs()
         Neues->setQFarbe(Farbe);
         ui->tableView->setModel(Neues);
         Auswahl=Kurse.size()-1;
+        Graphik.DatenGeaendert();
     }
 }
 

@@ -19,6 +19,8 @@ Diagramm::~Diagramm()
 
 int Diagramm::anzSchritte(int Stuffen, int Lange, float *Schritt)
 {
+    if(Stuffen==0)
+        Stuffen=1;
     *Schritt=Lange/Stuffen;
     while ((*Schritt<25)&&(Stuffen>10))//Der wert muss noch angpasst werden.
     {
@@ -37,7 +39,8 @@ void Diagramm::closeEvent(QCloseEvent *event)
 
 void Diagramm::DatenGeaendert()
 {
-    zeichnen();
+    if (offen)
+        zeichnen();
 }
 
 void Diagramm::resizeEvent(QResizeEvent *)
@@ -75,9 +78,11 @@ void Diagramm::zeichnen()
         delete Zeichnung;
     Zeichnung=new QGraphicsScene(this);
     ui->graphicsView->setScene(Zeichnung);
-    int Blatter=Kurse->maxBlatter()-1;
+    int Blatter=Kurse->maxBlatter();
     zeichneYAchse(50,25,Hoehe-25);
-    zeichneXAchse(50,Hoehe,Breite-50,Blatter);
+    zeichneXAchse(50,Hoehe,Breite-50,Blatter-1);
+    if (Blatter==0)
+        return;
     int Schritt=(Breite-50)/Blatter;
 
     for (vector<Kurs*>::const_iterator iter=Kurse->begin();iter!=Kurse->end();++iter)
