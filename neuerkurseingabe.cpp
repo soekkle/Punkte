@@ -17,13 +17,13 @@ NeuerKursEingabe::~NeuerKursEingabe()
 {
     delete ui;
 }
-
+//Wird Nach dem OK-drücken ausgeführt.
 void NeuerKursEingabe::accept()
 {
     Name=ui->lineEdit->text();
-    if (Name!="")
+    if (Name!="")//Prüft ob ein Kursname eingegeben wurde
         Erfolgreich=true;
-    close();
+    close();//Schließt das aktuelle Dialogfenster
 }
 
 void NeuerKursEingabe::ButtonFarbe()
@@ -31,11 +31,18 @@ void NeuerKursEingabe::ButtonFarbe()
     Farbwahl=QColorDialog::getColor(Farbwahl,this,"Kurs Farbe");
 }
 
+//!Zeigt den Dialog zum Erstellren des Neuen Kurses
+/*!
+ *@param *parent Pointer auf das Eltern Objekt
+ *@param *Farbe schreibt in die Adresse die ausgewählte Farbe des Kurses
+ *@param *Ok ist true wenn der Dialog mit OK Beendet wurde sonst false
+ *@return Name des Neuen Kurses
+*/
 QString NeuerKursEingabe::GetNeuerKurs(QWidget *parent,QColor *Farbe, bool *Ok)
 {
-    NeuerKursEingabe *Maske=new NeuerKursEingabe(parent);
-    Maske->exec();
-    *Ok=Maske->Erfolgreich;
+    NeuerKursEingabe *Maske=new NeuerKursEingabe(parent);//Erzeugt ein neues Dialog Objekt.
+    Maske->exec();//Führ den Dialog aus.
+    *Ok=Maske->Erfolgreich;//Schreibt die Ausgewählten werte zurück.
     *Farbe=Maske->Farbwahl;
     return Maske->Name;
 }
