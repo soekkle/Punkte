@@ -32,109 +32,120 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//! Versichert sich beim Anwender ob das Programm geschlossen werden soll.
+/*!
+ * Nach Rückfrage beim Benutzer wird alles vom Programm ordnungsgemäß geschlossen.
+*/
 void MainWindow::closeEvent( QCloseEvent *event )
 {
-    QMessageBox msgBox;
+    QMessageBox msgBox;//Inizalisiert den Prüfdialog
     msgBox.setText("Das Programm wird Beenden.");
     msgBox.setInformativeText("Wollen Sie vorm Beenden das Dokument Speichern ?");
     msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Save);
-    int Aussage=msgBox.exec();
-    if (Aussage==QMessageBox::Cancel)
+    int Aussage=msgBox.exec();//Ruft den Dialog auf.
+    if (Aussage==QMessageBox::Cancel)//Nach Cancel wird das Programm weiter Normal Ausgeführt
     {
         event->ignore();
         return;
     }
-    if(Aussage==QMessageBox::Save)
+    if(Aussage==QMessageBox::Save)//Nach Save wird die Eingabe gespeichert.
         if (!slotSpeichern())
             event->ignore();
     Graphik.close();
     event->accept();
 }
 
+//! Setzt alles in den Startzustand zurück
 void MainWindow::leeren()
 {
-    Kurse.clear();
-    Auswahl=-1;
-    SpeicherOrt="";
+    Kurse.clear();//Loscht alle Kurse
+    Auswahl=-1;//Setzt die Auswahl auf ein nicht exestirendes Objekt.
+    SpeicherOrt="";//Setzt den Speicherort Zurück.
 }
-
+//! Laden von Gesicherten Daten
+/*!
+ *Daten aus einer csv Datei Auslesen die Das Vormat einhält in dem Gespeichert wurde.
+*/
 bool MainWindow::laden()
 {
     QFile Datei(SpeicherOrt);
-    if (!Datei.open(QIODevice::ReadOnly | QIODevice::Text))
-             return false;
-    QTextStream Eingabe(&Datei);
-    //int Max=0;
-    QString Zeile=Eingabe.readLine();
-    int Pos=Zeile.indexOf(';');
-    while(-1<Pos)
+    if (!Datei.open(QIODevice::ReadOnly | QIODevice::Text)) //Öfnet die Datei und Prüft ob die Erfolgreich war.
+             return false; //Gibt zurück das ein Fehler aufgetreten ist.
+    QTextStream Eingabe(&Datei); //Verbindet die Datei mit einen Stream.
+    QString Zeile=Eingabe.readLine(); //Liest die Erste Zeile aus.
+    int Pos=Zeile.indexOf(';'); //Sucht den ersten Separator
+    while(-1<Pos) //Slange es weitere Separatoren gibt.
     {
-        QString Teil=Zeile.left(Pos);
+        QString Teil=Zeile.left(Pos); //Lesen des Namen des Kurses
         Kurs* Neu=Kurse.addKurs(Teil);
-        Zeile=Zeile.right(Zeile.length()-Pos-1);
-        Pos=Zeile.indexOf(';');
-        Teil=Zeile.left(Pos);
-        Neu->setFarbe(Teil.toInt());
-        Zeile=Zeile.right(Zeile.length()-Pos-1);
+        Zeile=Zeile.right(Zeile.length()-Pos-1); //Verkürzen der Zeichenkette
+        Pos=Zeile.indexOf(';');//Suche nächstes Trennzeichen
+        Teil=Zeile.left(Pos);//Auslesen der Farbe als int
+        Neu->setFarbe(Teil.toInt());//Setzen der Fabe des Kurses
+        Zeile=Zeile.right(Zeile.length()-Pos-1);//Verkürzen der Zeichenkette
         Pos=Zeile.indexOf(';');
     }
-    while(!Eingabe.atEnd())
+    while(!Eingabe.atEnd())//Solange noch Zeilen in der Datei sind
     {
-        Zeile=Eingabe.readLine();
-        Pos=Zeile.indexOf(';');
-        int i=0;
+        Zeile=Eingabe.readLine();//Lesen der nächsten Zeile
+        Pos=Zeile.indexOf(';');//Suchen des Trennzeichens
+        int i=0;//Zähler auf 0 Inizalisiren.
         do
         {
-            QString Teil1=Zeile.left(Pos);
+            QString Teil1=Zeile.left(Pos);//Auslesen der Maximal Punktzahl
             Zeile=Zeile.right(Zeile.length()-Pos-1);
             Pos=Zeile.indexOf(';');
-            QString Teil2=Zeile.left(Pos);
+            QString Teil2=Zeile.left(Pos);//Auslesen der Erreichten Punktzahl
             Zeile=Zeile.right(Zeile.length()-Pos-1);
             Pos=Zeile.indexOf(';');
-            Kurse[i]->addBlatt(Teil1.toInt(),Teil2.toInt());
-            ++i;
+            Kurse[i]->addBlatt(Teil1.toInt(),Teil2.toInt());//Setzen Der Gelesenen Werte in den Entsprechenden Kurs
+            ++i;//Erhöhen des Zählers
         }
         while (-1<Pos);
     }
-    Datei.close();
-    return true;
+    Datei.close();//Schließt die Datei
+    return true;//Gibt zurück das die Datei Erfolgreich gelesen wurde
 }
 
+//! Ädert die Farbe des ausgewhlten kurses
 void MainWindow::slotFarbe()
 {
-    if ((Auswahl<0)||(Auswahl>=Kurse.size()))
+    if ((Auswahl<0)||(Auswahl>=Kurse.size()))//Prüft ob ein Kurs ausgewählt ist.
         return;
-    Kurse[Auswahl]->setQFarbe(QColorDialog::getColor(Kurse[Auswahl]->getQColor(),this,"Kurs Farbe"));
-    Graphik.DatenGeaendert();
+    Kurse[Auswahl]->setQFarbe(QColorDialog::getColor(Kurse[Auswahl]->getQColor(),this,"Kurs Farbe"));//Ruft einen getColor Dialog auf und speichert den zurückgegeben wert in den Kurs.
+    Graphik.DatenGeaendert();//Läst das Diagramm neuzeichnen.
 }
 
+//! Solt der Das Laden von datein startet.
 void MainWindow::slotLaden()
 {
-    QString Path=SpeicherOrt;
-    if (Path=="")
-        Path=QDir::currentPath();
-    QString Ort=QFileDialog::getOpenFileName(this,tr("Punkte Laden"),Path,tr("Tabelle(*.csv)"));
-    leeren();
-    SpeicherOrt=Ort;
-    laden();
+    QString Path=SpeicherOrt;//Läht den Zuletzt verwendeten. Pfard.
+    if (Path=="")//Prüft ob er Leer ist
+        Path=QDir::currentPath();//Stzt in auf den Ausführort des Programms.
+    QString Ort=QFileDialog::getOpenFileName(this,tr("Punkte Laden"),Path,tr("Tabelle(*.csv)"));//rüft einen GetFileName dialog auf
+    leeren();//Setzt das Programm zurück.
+    SpeicherOrt=Ort;//Setzt den Ort aus dem Geladen wurde.
+    laden();//Läd die Datei mit der Entsprechenden Funktion.
 }
 
+//! Slot der Den Startzustand des Programms wiederherstellt.
 void MainWindow::slotNeu()
 {
     leeren();
     return;
 }
 
+//! Fugt dem Ausgewählten Kurs ein Blatt hinzu
 void MainWindow::slotNeuesBlatt()
 {
-    if ((Auswahl<0)||(Auswahl>=Kurse.size()))
+    if ((Auswahl<0)||(Auswahl>=Kurse.size()))//Prüft ob des ausgewählte Element gültig ist.
         return;
-    int Max=0,Erreicht=0;
-    Max=ui->EMaxPunkte->text().toInt();
+    int Max=0,Erreicht=0;//Inizalisirt die Punktzahl mit 0
+    Max=ui->EMaxPunkte->text().toInt();//List die Entsprechenden Zahle aus dem Formula aus.
     Erreicht=ui->EErPunkte->text().toInt();
-    Kurse[Auswahl]->addBlatt(Max,Erreicht);
-    Graphik.DatenGeaendert();
+    Kurse[Auswahl]->addBlatt(Max,Erreicht);//Fügt das Blatt mit den Ausgelesenen Werten den Ausgewählten kurs hinzu.
+    Graphik.DatenGeaendert();//Aktuallisirt die Graphik
 }
 
 void MainWindow::slotNeuerKurs()

@@ -31,7 +31,7 @@ void NeuerKursEingabe::ButtonFarbe()
     Farbwahl=QColorDialog::getColor(Farbwahl,this,"Kurs Farbe");
 }
 
-//!Zeigt den Dialog zum Erstellren des Neuen Kurses
+//! Zeigt den Dialog zum Erstellren des Neuen Kurses
 /*!
  *@param *parent Pointer auf das Eltern Objekt
  *@param *Farbe schreibt in die Adresse die ausgewählte Farbe des Kurses
@@ -47,9 +47,11 @@ QString NeuerKursEingabe::GetNeuerKurs(QWidget *parent,QColor *Farbe, bool *Ok)
     return Maske->Name;
 }
 
-//!Gibt bei jeden Aufruf einen ander Farbe wieder
-/*!Die Farben Haben einen Feste Reihenfolge. nach einer festen Anzahl von Aufrufen wiederholt sich die Reihenfolge
-@return eine Farbe*/
+//! Gibt bei jeden Aufruf einen ander Farbe wieder
+/*!
+ *Die Farben Haben einen Feste Reihenfolge. nach einer festen Anzahl von Aufrufen wiederholt sich die Reihenfolge
+ *@return eine Farbe
+*/
 QColor NeuerKursEingabe::nextColor()
 {
     QColor Farbe;
@@ -63,14 +65,14 @@ QColor NeuerKursEingabe::nextColor()
     case 5:Farbe.setRgb(57,255,239);
     default:
     {
-        Farbe=Qt::green;
+        Farbe=Qt::green;//Setzt bei nicht aufgeführten werten alles zurück.
         nextColorint=-1;
     }
     }
     return Farbe;
 }
-
+//Wird nach dem Caneld Drücken aufgerufen
 void NeuerKursEingabe::rejected()
 {
-    Erfolgreich=false;
+    Erfolgreich=false;//Setzt Alles auf Falses
 }
