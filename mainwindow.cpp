@@ -1,6 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+/*!
+ *@autor soekkle
+ *@date 28.02.14
+ *@version 0.1
+*/
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -148,84 +155,94 @@ void MainWindow::slotNeuesBlatt()
     Graphik.DatenGeaendert();//Aktuallisirt die Graphik
 }
 
+//! Fügt einen neuen Kurs hinzu
 void MainWindow::slotNeuerKurs()
 {
     bool OK;
-    QColor Farbe;
-    QString Name=NeuerKursEingabe::GetNeuerKurs(this,&Farbe,&OK);
-    if(OK)
+    QColor Farbe;//Inizalisirung der Variablen.
+    QString Name=NeuerKursEingabe::GetNeuerKurs(this,&Farbe,&OK);//Aufrufen des Dialoges zum erstellen des Neuen Kurses.
+    if(OK)//Rückgabe auswerten
     {
-        Kurs* Neues=Kurse.addKurs(Name);
+        Kurs* Neues=Kurse.addKurs(Name);//Erzeugen des Neuenkurses und setzen der Übergebenen Eigenschaften.
         Neues->setQFarbe(Farbe);
         ui->tableView->setModel(Neues);
         Auswahl=Kurse.size()-1;
-        Graphik.DatenGeaendert();
+        Graphik.DatenGeaendert();//Diagramm über die Änderung Informiren.
     }
 }
 
+//! Verarbeitet das auswählen einen Elementes in der Listview
 void MainWindow::selectionChangedSlot(const QItemSelection& neu  , const QItemSelection & )
 {
-    if (neu.isEmpty())
+    if (neu.isEmpty())// Prüft ob Tatsechlich ein Element ausgeählt wurde.
         return;
-    Auswahl=neu.indexes().first().row();
-    ui->tableView->setModel(Kurse[Auswahl]);
+    Auswahl=neu.indexes().first().row();//Speicher die Zeilennummer des Ausgewählten Kurses in einer Klassen Variable.
+    ui->tableView->setModel(Kurse[Auswahl]);//Änder in der tableview die Angezeigte Tabelle
 }
 
+//! Leitet das Speichern der Daten ein.
 bool MainWindow::slotSpeichern()
 {
-    if (SpeicherOrt=="")
-        SpeicherOrt=SpeichernDialog();
+    if (SpeicherOrt=="")//Prüft ob schon ein Speicherort bekannt ist.
+        SpeicherOrt=SpeichernDialog();//Wenn nicht wird einer Abgefragt.
     return Speichern();
 }
 
+//! Führt das Speichern unter aus.
 void MainWindow::slotSpeichernunter()
 {
-    SpeicherOrt=SpeichernDialog();
-    Speichern();
-}
-QString MainWindow::SpeichernDialog()
-{
-    QString Datei=QFileDialog::getSaveFileName(this,tr("Punkte Speichern"),QDir::currentPath(),tr("Tabelle(*.csv)"));
-    if (Datei.right(4)!=".csv")
-        Datei+=".csv";
-    return Datei;
+    SpeicherOrt=SpeichernDialog();//Fragt den Speicherort von Benutzer ab.
+    Speichern();//Ruft die Funktion zum Speichern auf.
 }
 
+//! Verarbeitet den Dialog Speichern unter.
+QString MainWindow::SpeichernDialog()
+{
+    QString Datei=QFileDialog::getSaveFileName(this,tr("Punkte Speichern"),QDir::currentPath(),tr("Tabelle(*.csv)"));//Öffnet den Dialog Speichern unter.
+    if (Datei.right(4)!=".csv")//Prüft ob die Datei die Rechtige Endung hat, wenn nicht wird sie Angehangen.
+        Datei+=".csv";
+    return Datei;//Gibt den Dateinamen mit Pfrad zurück.
+}
+
+//! Schreibt die Daten auf die Festplatte.
+/*!
+ * \brief MainWindow::Speichern
+ * Als Speicherort sird der in der Klassenvariable Speicherort verwendet.
+ * \return Ob Speichern Erfolgreich verlaufen ist.
+ */
 bool MainWindow::Speichern()
 {
-    if (SpeicherOrt=="")
+    if (SpeicherOrt=="")//Prüft ob überhaubt ein Speicherort angegeben ist.
         return false;
-    QFile Datei(SpeicherOrt);
-    if (!Datei.open(QIODevice::WriteOnly | QIODevice::Text))
+    QFile Datei(SpeicherOrt);//Ersteilt ein dateiobjekt, dass auf die Datei zeigt.
+    if (!Datei.open(QIODevice::WriteOnly | QIODevice::Text))// Prüft ob die Datei erfolgreich geöffnet werden kann.
              return false;
-    QTextStream Ausgabe(&Datei);
-    int Max=0;
-    for(int i=0;i<Kurse.size();++i)
+    QTextStream Ausgabe(&Datei);//Verbindet die Datei mit einen Stream.
+    int Max=Kurse.maxBlatter();//Variable zum Speichern der Maxiamlaanzahl von Blättern.
+    for(int i=0;i<Kurse.size();++i)//Abeitet alle Kurse Ab und Schreibt die Kopfzeile der Tabelle
     {
-        int anz=Kurse[i]->anzBlaetter();
-        if(Max<anz)
-            Max=anz;
         Ausgabe<<Kurse[i]->getName()<<";"<<Kurse[i]->getFarbe()<<";";
     }
     Ausgabe<<endl;
-    for(int i=0;i<Max;++i)
+    for(int i=0;i<Max;++i)//Get die Kanzen Blätter aller Kurse durch.
     {
-        for(int ii=0;ii<Kurse.size();++ii)
+        for(int ii=0;ii<Kurse.size();++ii)//Schreibt eine Zeile Daten in die Tabelle.
         {
             int anz=Kurse[ii]->anzBlaetter();
-            if(i<anz)
+            if(i<anz)//Prüft ob Speicherzugriffs Fehler aufterten könnten.
             {
-                Ausgabe<<Kurse[ii]->getBlattMax(i)<<";"<<Kurse[ii]->getBlattErreicht(i)<<";";
+                Ausgabe<<Kurse[ii]->getBlattMax(i)<<";"<<Kurse[ii]->getBlattErreicht(i)<<";";//Schreibt die Daten in die Datei.
             }
             else
-                Ausgabe<<";;";
+                Ausgabe<<";;";//Sonst wird ein Platzhalter verwendet.
         }
         Ausgabe<<endl;
     }
-    Datei.close();
+    Datei.close();//Schließt die Datei.
     return true;
 }
 
+//! Öffnet einen Dialog der Infos Über das Programm anzeigt.
 void MainWindow::slotUber()
 {
     QMessageBox::about(this,"Punkte","Diese Anwendung steht unter der GPLv3 Lizenz\n(c) 2014 soekkle\nsoekkle@freenet.de");
