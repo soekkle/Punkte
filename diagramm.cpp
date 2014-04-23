@@ -22,9 +22,14 @@ int Diagramm::anzSchritte(int Stuffen, int Lange, float *Schritt)
     if(Stuffen==0)
         Stuffen=1;
     *Schritt=Lange/Stuffen;
+    int LastDiff=2;
     while ((*Schritt<25)&&(Stuffen>10))//Der wert muss noch angpasst werden.
     {
-        Stuffen=Stuffen/10;
+        if (LastDiff==2)
+            LastDiff=5;
+        else
+            LastDiff=2;
+        Stuffen=Stuffen/LastDiff;
         *Schritt=Lange/Stuffen;
     }
     return Stuffen;
@@ -80,11 +85,9 @@ void Diagramm::zeichnen()
     ui->graphicsView->setScene(Zeichnung);
     int Blatter=Kurse->maxBlatter();
     zeichneYAchse(50,25,Hoehe-25);
-    zeichneXAchse(50,Hoehe,Breite-50,Blatter-1);
+    float Schritt=zeichneXAchse(50,Hoehe,Breite-50,Blatter-1);
     if (Blatter==0)
         return;
-    int Schritt=(Breite-50)/Blatter;
-
     for (vector<Kurs*>::const_iterator iter=Kurse->begin();iter!=Kurse->end();++iter)
     {
         Kurs *Element=*iter;
@@ -102,7 +105,7 @@ void Diagramm::zeichnen()
     }
 }
 
-void Diagramm::zeichneXAchse(int x, int y, int Lange, int Elemente)
+float Diagramm::zeichneXAchse(int x, int y, int Lange, int Elemente)
 {
     Zeichnung->addLine(x,y,x+Lange,y);
     /*Zeichnung->addLine(x+Lange-15,y-15,x+Lange,y);
@@ -122,6 +125,7 @@ void Diagramm::zeichneXAchse(int x, int y, int Lange, int Elemente)
         Text->setPos(i*Weite+x,y+10);
         Zeichnung->addItem(Text);
     }
+    return Weite/EleSchritt;
 }
 
 void Diagramm::zeichneYAchse(int x, int y, int Lange)

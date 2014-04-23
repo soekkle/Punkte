@@ -34,7 +34,7 @@ private:
     QGraphicsScene *Zeichnung;
     int anzSchritte(int Stuffen,int Lange,float *Schritt);
     void zeichnen();
-    void zeichneXAchse(int x,int y,int Lange,int Elemente);
+    float zeichneXAchse(int x,int y,int Lange,int Elemente);
     void zeichneYAchse(int x,int y,int Lange);
 };
 
