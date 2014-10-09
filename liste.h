@@ -2,6 +2,8 @@
 #define LISTE_H
 
 #include "kurs.h"
+#include <QFile>
+#include <QTextStream>
 
 class Liste : public QAbstractTableModel
 {
@@ -17,6 +19,10 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     Kurs* operator [](int i);
     int rowCount(const QModelIndex &) const;
+    //! Speichert den Inhalt in einer cvs Tabelle
+    bool savecvsfile(QFile *Datei);
+    //! Speichert den Inhalt in einer xml Tabelle
+    bool savexmlfile(QFile *Datei);
     int size();
     int maxBlatter();
 private:

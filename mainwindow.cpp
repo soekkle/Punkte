@@ -69,6 +69,7 @@ void MainWindow::leeren()
     Kurse.clear();//Loscht alle Kurse
     Auswahl=-1;//Setzt die Auswahl auf ein nicht exestirendes Objekt.
     SpeicherOrt="";//Setzt den Speicherort Zurück.
+    Dateityp=0;
 }
 //! Laden von Gesicherten Daten
 /*!
@@ -127,11 +128,19 @@ void MainWindow::slotFarbe()
 //! Solt der Das Laden von datein startet.
 void MainWindow::slotLaden()
 {
-    QString Path=SpeicherOrt;//Läht den Zuletzt verwendeten. Pfard.
+    QString Path=SpeicherOrt,Filter;//Läht den Zuletzt verwendeten. Pfard.
     if (Path=="")//Prüft ob er Leer ist
         Path=QDir::currentPath();//Stzt in auf den Ausführort des Programms.
-    QString Ort=QFileDialog::getOpenFileName(this,tr("Punkte Laden"),Path,tr("Tabelle(*.csv)"));//rüft einen GetFileName dialog auf
+    QString Ort=QFileDialog::getOpenFileName(this,tr("Punkte Laden"),Path,tr("Tabelle(*.csv);;XML-Datei(*.xml)"),&Filter);//rüft einen GetFileName dialog auf
     leeren();//Setzt das Programm zurück.
+    if(Filter=="Tabelle(*.csv)")//Prüft ob Tabelle als Filter gewählt wurde
+    {
+        Dateityp=1;
+    }
+    else if(Filter=="XML-Datei(*.xml)")//Prüft ob xml als Filter gewählt wurde
+    {
+        Dateityp=2;
+    }
     SpeicherOrt=Ort;//Setzt den Ort aus dem Geladen wurde.
     laden();//Läd die Datei mit der Entsprechenden Funktion.
 }
@@ -190,7 +199,7 @@ bool MainWindow::slotSpeichern()
 
 //! Führt das Speichern unter aus.
 void MainWindow::slotSpeichernunter()
-{
+{ 
     SpeicherOrt=SpeichernDialog();//Fragt den Speicherort von Benutzer ab.
     Speichern();//Ruft die Funktion zum Speichern auf.
 }
@@ -198,9 +207,22 @@ void MainWindow::slotSpeichernunter()
 //! Verarbeitet den Dialog Speichern unter.
 QString MainWindow::SpeichernDialog()
 {
-    QString Datei=QFileDialog::getSaveFileName(this,tr("Punkte Speichern"),QDir::currentPath(),tr("Tabelle(*.csv)"));//Öffnet den Dialog Speichern unter.
-    if (Datei.right(4)!=".csv")//Prüft ob die Datei die Rechtige Endung hat, wenn nicht wird sie Angehangen.
-        Datei+=".csv";
+    QString Filter,Endung="";
+    QString Datei=QFileDialog::getSaveFileName(this,tr("Punkte Speichern"),QDir::currentPath(),tr("Tabelle(*.csv);;XML-Datei(*.xml)"),&Filter);//Öffnet den Dialog Speichern unter.
+    if(Filter=="Tabelle(*.csv)")//Prüft ob Tabelle als Filter gewählt wurde
+    {
+        Dateityp=1;
+        Endung=".csv";
+    }
+    else if(Filter=="XML-Datei(*.xml)")//Prüft ob xml als Filter gewählt wurde
+    {
+        Dateityp=2;
+        Endung=".xml";
+    }
+    else
+        return "";
+    if (Datei.right(Endung.length())!=Endung)//Prüft ob die Datei die Rechtige Endung hat, wenn nicht wird sie Angehangen.
+        Datei+=Endung;
     return Datei;//Gibt den Dateinamen mit Pfrad zurück.
 }
 
@@ -217,29 +239,13 @@ bool MainWindow::Speichern()
     QFile Datei(SpeicherOrt);//Ersteilt ein dateiobjekt, dass auf die Datei zeigt.
     if (!Datei.open(QIODevice::WriteOnly | QIODevice::Text))// Prüft ob die Datei erfolgreich geöffnet werden kann.
              return false;
-    QTextStream Ausgabe(&Datei);//Verbindet die Datei mit einen Stream.
-    int Max=Kurse.maxBlatter();//Variable zum Speichern der Maxiamlaanzahl von Blättern.
-    for(int i=0;i<Kurse.size();++i)//Abeitet alle Kurse Ab und Schreibt die Kopfzeile der Tabelle
-    {
-        Ausgabe<<Kurse[i]->getName()<<";"<<Kurse[i]->getFarbe()<<";";
-    }
-    Ausgabe<<endl;
-    for(int i=0;i<Max;++i)//Get die Kanzen Blätter aller Kurse durch.
-    {
-        for(int ii=0;ii<Kurse.size();++ii)//Schreibt eine Zeile Daten in die Tabelle.
-        {
-            int anz=Kurse[ii]->anzBlaetter();
-            if(i<anz)//Prüft ob Speicherzugriffs Fehler aufterten könnten.
-            {
-                Ausgabe<<Kurse[ii]->getBlattMax(i)<<";"<<Kurse[ii]->getBlattErreicht(i)<<";";//Schreibt die Daten in die Datei.
-            }
-            else
-                Ausgabe<<";;";//Sonst wird ein Platzhalter verwendet.
-        }
-        Ausgabe<<endl;
-    }
+    bool Erfolgreich=false;
+    if (Dateityp==1)//Prüft den Gewünschten Dateityp Und Speichert entsprechend.
+        Erfolgreich=Kurse.savecvsfile(&Datei);
+    if (Dateityp==2)
+        Erfolgreich=Kurse.savexmlfile(&Datei);
     Datei.close();//Schließt die Datei.
-    return true;
+    return Erfolgreich;
 }
 
 //! Öffnet einen Dialog der Infos Über das Programm anzeigt.

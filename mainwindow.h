@@ -9,8 +9,6 @@
 #include <QMessageBox>
 #include <QMainWindow>
 #include <QItemSelectionModel>
-#include <QFile>
-#include <QTextStream>
 #include <QApplication>
 
 #include "kurs.h"
@@ -43,6 +41,7 @@ private:
     bool Speichern();
     void leeren();
     bool laden();
+    unsigned int Dateityp;//Zum Speichern des Verwendeten Dateitypens.
 
 private slots:
     void slotNeu();

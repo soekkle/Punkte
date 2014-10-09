@@ -101,6 +101,42 @@ int Liste::rowCount(const QModelIndex &/*parent*/) const
     return Kurse.size();
 }
 
+/*!
+ * \brief Liste::savecvsfile
+ * \param Datei Zeiger Auf Die Datein in die Geschrieben werden soll.
+ * \return
+ */
+bool Liste::savecvsfile(QFile *Datei)
+{
+    QTextStream Ausgabe(Datei);//Verbindet die Datei mit einen Stream.
+    int Max=this->maxBlatter();//Variable zum Speichern der Maxiamlaanzahl von Blättern.
+    for(int i=0;i<this->size();++i)//Abeitet alle Kurse Ab und Schreibt die Kopfzeile der Tabelle
+    {
+        Ausgabe<<Kurse[i]->getName()<<";"<<Kurse[i]->getFarbe()<<";";
+    }
+    Ausgabe<<endl;
+    for(int i=0;i<Max;++i)//Get die Kanzen Blätter aller Kurse durch.
+    {
+        for(int ii=0;ii<this->size();++ii)//Schreibt eine Zeile Daten in die Tabelle.
+        {
+            int anz=Kurse[ii]->anzBlaetter();
+            if(i<anz)//Prüft ob Speicherzugriffs Fehler aufterten könnten.
+            {
+                Ausgabe<<Kurse[ii]->getBlattMax(i)<<";"<<Kurse[ii]->getBlattErreicht(i)<<";";//Schreibt die Daten in die Datei.
+            }
+            else
+                Ausgabe<<";;";//Sonst wird ein Platzhalter verwendet.
+        }
+        Ausgabe<<endl;
+    }
+    return true;
+}
+
+bool Liste::savexmlfile(QFile *Datei)
+{
+    return true;
+}
+
 int Liste::size()
 {
     return Kurse.size();
