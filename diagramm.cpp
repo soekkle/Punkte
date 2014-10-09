@@ -34,9 +34,14 @@ int Diagramm::anzSchritte(int Stuffen, int Lange, float *Schritt)
     if(Stuffen==0)//Um Division durch Null zu verhindern
         Stuffen=1;
     *Schritt=Lange/Stuffen;//Berechnen der ersten scallierung
+    int LastDiff=2;
     while ((*Schritt<25)&&(Stuffen>10))//Der wert muss noch angpasst werden.
     {
-        Stuffen=Stuffen/10;
+        if (LastDiff==2)
+            LastDiff=5;
+        else
+            LastDiff=2;
+        Stuffen=Stuffen/LastDiff;
         *Schritt=Lange/Stuffen;
     }
     return Stuffen;//Wiedergabe des Berechneten wertes.
@@ -105,11 +110,10 @@ void Diagramm::zeichnen()
     ui->graphicsView->setScene(Zeichnung);
     int Blatter=Kurse->maxBlatter();//Ruft die Maximale Anzahl von Blättern ab.
     zeichneYAchse(50,25,Hoehe-25);//Zeichnet eine X-Achse
-    zeichneXAchse(50,Hoehe,Breite-50,Blatter-1);//Zeichnet eine y-Achse.
+    float Schritt=zeichneXAchse(50,Hoehe,Breite-50,Blatter-1);
     if (Blatter==0)//Bricht bei 0 Blättern ab.
         return;
-    int Schritt=(Breite-50)/Blatter;//Berechnet die Schrittbreite Für ein Blatt
-    for (vector<Kurs*>::const_iterator iter=Kurse->begin();iter!=Kurse->end();++iter)//Zeichnet für jeden Kurs
+    for (vector<Kurs*>::const_iterator iter=Kurse->begin();iter!=Kurse->end();++iter)
     {
         Kurs *Element=*iter;
         if (Element->anzBlaetter()==0)//Prüft ob Blätter angelegt wurden.
@@ -133,7 +137,7 @@ void Diagramm::zeichnen()
  * \param Lange Länge der x-Achse
  * \param Elemente Anzahl der Unterteilungen
  */
-void Diagramm::zeichneXAchse(int x, int y, int Lange, int Elemente)
+float Diagramm::zeichneXAchse(int x, int y, int Lange, int Elemente)
 {
     Zeichnung->addLine(x,y,x+Lange,y);//Fügt die Linie der X-Achse Hinzu.
     QGraphicsTextItem * Text = new QGraphicsTextItem;//Objekt für die Texte der Legende.
@@ -151,6 +155,7 @@ void Diagramm::zeichneXAchse(int x, int y, int Lange, int Elemente)
         Text->setPos(i*Weite+x,y+10);
         Zeichnung->addItem(Text);
     }
+    return Weite/EleSchritt;
 }
 //! Zeichnet die Y-Achse in ein Diagramm
 /*!
