@@ -1,6 +1,12 @@
 #include "neuerkurseingabe.h"
 #include "ui_neuerkurseingabe.h"
 
+/*!
+ *@autor soekkle
+ *@date 17.02.14
+ *@version 0.1
+*/
+
 int NeuerKursEingabe::nextColorint=-1;
 
 NeuerKursEingabe::NeuerKursEingabe(QWidget *parent) :

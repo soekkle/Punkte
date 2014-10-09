@@ -1,4 +1,8 @@
-/*(c)2013 soekkle*/
+/*!
+ *@autor soekkle
+ *@date 17.02.14
+ *@version 0.1
+*/
 #include <QApplication>
 #include "mainwindow.h"
 

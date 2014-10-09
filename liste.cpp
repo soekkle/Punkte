@@ -1,5 +1,11 @@
 #include "liste.h"
 
+/*!
+ *@autor soekkle
+ *@date 17.02.14
+ *@version 0.1
+*/
+
 Liste::Liste()
 {
 }

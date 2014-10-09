@@ -125,12 +125,17 @@ void Diagramm::zeichnen()
         Zeichnung->addPath(Linie,Farbe);//Zeichnet das Element.
     }
 }
-
+//! Zeichnet die X-Achse in ein Diagramm
+/*!
+ * \brief Diagramm::zeichneXAchse
+ * \param x x Kordionate des Startpunkt der x-Achse
+ * \param y y Kordionate des Startpunkt der x-Achse
+ * \param Lange Länge der x-Achse
+ * \param Elemente Anzahl der Unterteilungen
+ */
 void Diagramm::zeichneXAchse(int x, int y, int Lange, int Elemente)
 {
-    Zeichnung->addLine(x,y,x+Lange,y);
-    /*Zeichnung->addLine(x+Lange-15,y-15,x+Lange,y);
-    Zeichnung->addLine(x+Lange-15,y+15,x+Lange,y);*/
+    Zeichnung->addLine(x,y,x+Lange,y);//Fügt die Linie der X-Achse Hinzu.
     QGraphicsTextItem * Text = new QGraphicsTextItem;//Objekt für die Texte der Legende.
     Text->setPos(x,y+10);
     Text->setPlainText("1");
@@ -147,7 +152,13 @@ void Diagramm::zeichneXAchse(int x, int y, int Lange, int Elemente)
         Zeichnung->addItem(Text);
     }
 }
-
+//! Zeichnet die Y-Achse in ein Diagramm
+/*!
+ * \brief Diagramm::zeichneYAchse
+ * \param x x Kordionate des Startpunkt der y-Achse
+ * \param y y Kordionate des Startpunkt der y-Achse
+ * \param Lange Länge der y-Achse
+ */
 void Diagramm::zeichneYAchse(int x, int y, int Lange)
 {
     Zeichnung->addLine(x,y,x,y+Lange);
