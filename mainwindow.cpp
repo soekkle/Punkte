@@ -80,40 +80,11 @@ bool MainWindow::laden()
     QFile Datei(SpeicherOrt);
     if (!Datei.open(QIODevice::ReadOnly | QIODevice::Text)) //Öfnet die Datei und Prüft ob die Erfolgreich war.
              return false; //Gibt zurück das ein Fehler aufgetreten ist.
-    QTextStream Eingabe(&Datei); //Verbindet die Datei mit einen Stream.
-    QString Zeile=Eingabe.readLine(); //Liest die Erste Zeile aus.
-    int Pos=Zeile.indexOf(';'); //Sucht den ersten Separator
-    while(-1<Pos) //Slange es weitere Separatoren gibt.
-    {
-        QString Teil=Zeile.left(Pos); //Lesen des Namen des Kurses
-        Kurs* Neu=Kurse.addKurs(Teil);
-        Zeile=Zeile.right(Zeile.length()-Pos-1); //Verkürzen der Zeichenkette
-        Pos=Zeile.indexOf(';');//Suche nächstes Trennzeichen
-        Teil=Zeile.left(Pos);//Auslesen der Farbe als int
-        Neu->setFarbe(Teil.toInt());//Setzen der Fabe des Kurses
-        Zeile=Zeile.right(Zeile.length()-Pos-1);//Verkürzen der Zeichenkette
-        Pos=Zeile.indexOf(';');
-    }
-    while(!Eingabe.atEnd())//Solange noch Zeilen in der Datei sind
-    {
-        Zeile=Eingabe.readLine();//Lesen der nächsten Zeile
-        Pos=Zeile.indexOf(';');//Suchen des Trennzeichens
-        int i=0;//Zähler auf 0 Inizalisiren.
-        do
-        {
-            QString Teil1=Zeile.left(Pos);//Auslesen der Maximal Punktzahl
-            Zeile=Zeile.right(Zeile.length()-Pos-1);
-            Pos=Zeile.indexOf(';');
-            QString Teil2=Zeile.left(Pos);//Auslesen der Erreichten Punktzahl
-            Zeile=Zeile.right(Zeile.length()-Pos-1);
-            Pos=Zeile.indexOf(';');
-            Kurse[i]->addBlatt(Teil1.toInt(),Teil2.toInt());//Setzen Der Gelesenen Werte in den Entsprechenden Kurs
-            ++i;//Erhöhen des Zählers
-        }
-        while (-1<Pos);
-    }
+    bool Erfolgreich=false;
+    if(Dateityp==1)
+        Erfolgreich=Kurse.loadcvsfile(&Datei);
     Datei.close();//Schließt die Datei
-    return true;//Gibt zurück das die Datei Erfolgreich gelesen wurde
+    return Erfolgreich;//Gibt zurück das die Datei Erfolgreich gelesen wurde
 }
 
 //! Ädert die Farbe des ausgewhlten kurses
