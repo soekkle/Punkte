@@ -4,6 +4,7 @@
 #include "kurs.h"
 #include <QFile>
 #include <QTextStream>
+#include <QXmlStreamWriter>
 
 class Liste : public QAbstractTableModel
 {

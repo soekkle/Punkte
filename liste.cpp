@@ -104,7 +104,7 @@ int Liste::rowCount(const QModelIndex &/*parent*/) const
 /*!
  * \brief Liste::savecvsfile
  * \param Datei Zeiger Auf Die Datein in die Geschrieben werden soll.
- * \return
+ * \return Ob das Speichern erfolgreich war.
  */
 bool Liste::savecvsfile(QFile *Datei)
 {
@@ -132,8 +132,32 @@ bool Liste::savecvsfile(QFile *Datei)
     return true;
 }
 
+/*!
+ * \brief Liste::savexmlfile
+ * \param Datei Zeiger Auf Die Datein in die Geschrieben werden soll.
+ * \return ob das Speichern erfolgreich war.
+ */
 bool Liste::savexmlfile(QFile *Datei)
 {
+    QXmlStreamWriter Ausgabe(Datei);//Erzeugt Ein QXLMStream.
+    Ausgabe.writeStartDocument ();//Schreibt den Kopf des Dokumentes.
+    Ausgabe.writeStartElement("Kurse");//Erstellt das Wurzelelement des Dokumenntes.
+    for (vector<Kurs*>::const_iterator iter=begin();iter!=end();++iter)
+    {
+        Kurs* Element=*iter;
+        Ausgabe.writeStartElement("Kurs");//Beginnt das Element des aktuellen Kurses.
+        Ausgabe.writeTextElement("Name",Element->getName());//Schreibt den Namen des Aktuellen Kurses.
+        Ausgabe.writeTextElement("Farbe",QString::number(Element->getFarbe()));//Schreibt die Farbe des Aktuellen Kurses.
+        for(int i=0;i<Element->anzBlaetter();i++)
+        {
+            Ausgabe.writeStartElement("Blatt");//Öffnet das Element für das aktuelle Blatt.
+            Ausgabe.writeTextElement("MaxPunkte",QString::number(Element->getBlattMax(i)));//Schreibt die Maximal Erreichbare Punktzahl
+            Ausgabe.writeTextElement("ErreichtePunkte",QString::number(Element->getBlattErreicht(i)));//Schreibt die Erreichte Punktzahl
+            Ausgabe.writeEndElement();//Schließt das aktuelle Blatt.
+        }
+        Ausgabe.writeEndElement();//Schließt das element des Aktuellen Kurses.
+    }
+    Ausgabe.writeEndDocument();//Schließt das Aktuelle Dokument.
     return true;
 }
 
