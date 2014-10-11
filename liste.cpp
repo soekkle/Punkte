@@ -131,6 +131,59 @@ bool Liste::loadcvsfile(QFile *Datei)
     return true;
 }
 
+/*!
+ * \brief Liste::loadxmlfile
+ * \param Datei Pointer auf die Datei aus der Geladen wird.
+ * \return Ob das Laden erfolgreich verlaufen ist.
+ */
+bool Liste::loadxmlfile(QFile *Datei)
+{
+    QDomDocument XMLDatei("Kurse");
+    if (!XMLDatei.setContent(Datei))//Setzt den Inhalt des Domdokuments
+    {
+        return false;
+    }
+    QDomElement Wurzel=XMLDatei.documentElement();
+    if (!(Wurzel.tagName()=="Kurse"))
+    {
+        return false;
+    }
+    QDomNode xmlkurs=Wurzel.firstChild();
+    while(!xmlkurs.isNull())
+    {
+        QDomElement kurs=xmlkurs.toElement();
+        if (kurs.isNull())
+            continue;
+        if (kurs.tagName()=="Kurs")
+        {
+            QDomElement xmlelement=kurs.elementsByTagName("Name").item(0).toElement();
+            Kurs* Neu=addKurs(xmlelement.text());
+            xmlelement=kurs.elementsByTagName("Farbe").item(0).toElement();
+            Neu->setFarbe(xmlelement.text().toInt());
+            QDomNodeList XmlBlatter=kurs.elementsByTagName("Blatt");
+            int anz=XmlBlatter.length();
+            for (int i=0;i<anz;i++)
+            {
+                QDomNode XmlEintrag=XmlBlatter.item(i).toElement().firstChild();
+                int max=0,err=0;
+                while(!XmlEintrag.isNull())
+                {
+                    QDomElement Eintrag=XmlEintrag.toElement();
+                    QString text=Eintrag.tagName();
+                    if (text=="MaxPunkte")
+                        max=Eintrag.text().toInt();
+                    if (text=="ErreichtePunkte")
+                        err=Eintrag.text().toInt();
+                    XmlEintrag=XmlEintrag.nextSibling();
+                }
+                Neu->addBlatt(max,err);
+            }
+        }
+        xmlkurs=xmlkurs.nextSibling();
+    }
+    return true;
+}
+
 Kurs* Liste::operator [](int i)
 {
     if ((i<-1)||(i>=size()))

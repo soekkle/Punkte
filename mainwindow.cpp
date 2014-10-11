@@ -83,6 +83,8 @@ bool MainWindow::laden()
     bool Erfolgreich=false;
     if(Dateityp==1)
         Erfolgreich=Kurse.loadcvsfile(&Datei);
+    if(Dateityp==2)
+        Erfolgreich=Kurse.loadxmlfile(&Datei);
     Datei.close();//Schließt die Datei
     return Erfolgreich;//Gibt zurück das die Datei Erfolgreich gelesen wurde
 }

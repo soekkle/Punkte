@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QXmlStreamWriter>
+#include <QDomDocument>
 
 class Liste : public QAbstractTableModel
 {
