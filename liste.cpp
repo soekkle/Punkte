@@ -144,39 +144,39 @@ bool Liste::loadxmlfile(QFile *Datei)
         return false;
     }
     QDomElement Wurzel=XMLDatei.documentElement();
-    if (!(Wurzel.tagName()=="Kurse"))
+    if (!(Wurzel.tagName()=="Kurse"))//Prüft ob das Richtige Wurzelelement vorhanden ist.
     {
         return false;
     }
     QDomNode xmlkurs=Wurzel.firstChild();
-    while(!xmlkurs.isNull())
+    while(!xmlkurs.isNull())//Itterirt über alle Kinder der Wurzel
     {
         QDomElement kurs=xmlkurs.toElement();
         if (kurs.isNull())
             continue;
-        if (kurs.tagName()=="Kurs")
+        if (kurs.tagName()=="Kurs")//Prüft ob es sich um Einen Kurs handelt sonst wird es ignorirt
         {
-            QDomElement xmlelement=kurs.elementsByTagName("Name").item(0).toElement();
-            Kurs* Neu=addKurs(xmlelement.text());
-            xmlelement=kurs.elementsByTagName("Farbe").item(0).toElement();
-            Neu->setFarbe(xmlelement.text().toInt());
-            QDomNodeList XmlBlatter=kurs.elementsByTagName("Blatt");
+            QDomElement xmlelement=kurs.elementsByTagName("Name").item(0).toElement();//Sucht den Namen des Kurses
+            Kurs* Neu=addKurs(xmlelement.text());//Erstellt einen Neuen Kurs im Arbeistsspeicher
+            xmlelement=kurs.elementsByTagName("Farbe").item(0).toElement();//Sucht die Farbe des Kurses
+            Neu->setFarbe(xmlelement.text().toInt());//Setzt die Farbe des Altuellen Kurses
+            QDomNodeList XmlBlatter=kurs.elementsByTagName("Blatt");//Erstellt einen Liste Mit Den Blättern
             int anz=XmlBlatter.length();
-            for (int i=0;i<anz;i++)
+            for (int i=0;i<anz;i++)//Iterirt über die Liste der Blätter
             {
                 QDomNode XmlEintrag=XmlBlatter.item(i).toElement().firstChild();
                 int max=0,err=0;
-                while(!XmlEintrag.isNull())
+                while(!XmlEintrag.isNull())//Arbeitet alle Kinder eines Blattes ab.
                 {
                     QDomElement Eintrag=XmlEintrag.toElement();
-                    QString text=Eintrag.tagName();
+                    QString text=Eintrag.tagName();//Prüft um was Für ein Element es sich handelt
                     if (text=="MaxPunkte")
                         max=Eintrag.text().toInt();
                     if (text=="ErreichtePunkte")
                         err=Eintrag.text().toInt();
                     XmlEintrag=XmlEintrag.nextSibling();
                 }
-                Neu->addBlatt(max,err);
+                Neu->addBlatt(max,err);//Erzeugt ein Blatt mit den gewonnen informationen
             }
         }
         xmlkurs=xmlkurs.nextSibling();
