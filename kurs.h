@@ -8,20 +8,28 @@
 
 using namespace std;
 
+/*!
+ *@autor soekkle
+ *@date 13.10.14
+ *@version 0.2
+*/
+
 class Kurs : public QAbstractTableModel
 {
     Q_OBJECT
 public:
     Kurs(QObject *parent, QString Name);
-    void addBlatt(int Max,int Erreicht);
+    void addBlatt(int Max, int Erreicht, int Woche=0);
     int anzBlaetter() const;
     int getBlattErreicht(int Blatt);
     int getBlattMax(int Blatt);
+    int getBlattWoche(int Blatt);
     int getFarbe();
     int getGesammtMaxPunkte() const;
     int getGesammtErreichtPunkte()const;
     QString getName() const;
     QColor getQColor();
+    int getRythmus();
     double getVerhalt(int Blatt) const;
     double getVerhaltBlatt(int Blatt)const;
     int rowCount(const QModelIndex &parent) const;
@@ -32,11 +40,18 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const;
     void setFarbe(int Farbe);
     void setQFarbe(QColor Farbe);
+    void setRythmus(int Rythmus);
 private:
-    QString KursName;
-    vector<int>ErPunkte;
-    vector<int>MaxPunkte;
     int Farbe;
+    QString KursName;
+    //! Vector der alle Erreichten Punkte enthält.
+    vector<int>ErPunkteList;
+    //! Vector der alle Erreichbaren Punkte enthält.
+    vector<int>MaxPunkteList;
+    //! Speichert den Rythmus der Übungsblätter
+    int Rythmus;
+    //! Vector der die zu den Blättern gehörige Woche Enthält.
+    vector<int>WochenList;
 };
 
 #endif // KURS_H

@@ -15,7 +15,7 @@ class NeuerKursEingabe : public QDialog
 public:
     explicit NeuerKursEingabe(QWidget *parent = 0);
     ~NeuerKursEingabe();
-    static QString GetNeuerKurs(QWidget *parent, QColor *Farbe, bool *Ok);
+    static QString GetNeuerKurs(QWidget *parent, QColor *Farbe, bool *Ok, int *Rythmus);
 
 private:
 
@@ -25,6 +25,7 @@ private:
     bool Erfolgreich;
     QColor Farbwahl;
     QString Name;
+    int Rythmus;
 
 private slots:
     void accept();

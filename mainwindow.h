@@ -37,6 +37,7 @@ private:
     int Auswahl;
     QString SpeicherOrt;
     Diagramm Graphik;
+    void setWoche();
     QString SpeichernDialog();
     bool Speichern();
     void leeren();

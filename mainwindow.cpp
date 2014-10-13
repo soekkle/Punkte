@@ -89,6 +89,13 @@ bool MainWindow::laden()
     return Erfolgreich;//Gibt zurück das die Datei Erfolgreich gelesen wurde
 }
 
+void MainWindow::setWoche()
+{
+    int nr=Kurse[Auswahl]->anzBlaetter()-1;
+    int woche=Kurse[Auswahl]->getBlattWoche(nr)+Kurse[Auswahl]->getRythmus();
+    ui->spinBox->setValue(woche);
+}
+
 //! Ädert die Farbe des ausgewhlten kurses
 void MainWindow::slotFarbe()
 {
@@ -130,11 +137,13 @@ void MainWindow::slotNeuesBlatt()
 {
     if ((Auswahl<0)||(Auswahl>=Kurse.size()))//Prüft ob des ausgewählte Element gültig ist.
         return;
-    int Max=0,Erreicht=0;//Inizalisirt die Punktzahl mit 0
+    int Max=0,Erreicht=0,Woche=0;//Inizalisirt die Punktzahl mit 0
     Max=ui->EMaxPunkte->text().toInt();//List die Entsprechenden Zahle aus dem Formula aus.
     Erreicht=ui->EErPunkte->text().toInt();
-    Kurse[Auswahl]->addBlatt(Max,Erreicht);//Fügt das Blatt mit den Ausgelesenen Werten den Ausgewählten kurs hinzu.
+    Woche=ui->spinBox->value();
+    Kurse[Auswahl]->addBlatt(Max,Erreicht,Woche);//Fügt das Blatt mit den Ausgelesenen Werten den Ausgewählten kurs hinzu.
     Graphik.DatenGeaendert();//Aktuallisirt die Graphik
+    setWoche();
 }
 
 //! Fügt einen neuen Kurs hinzu
@@ -142,11 +151,13 @@ void MainWindow::slotNeuerKurs()
 {
     bool OK;
     QColor Farbe;//Inizalisirung der Variablen.
-    QString Name=NeuerKursEingabe::GetNeuerKurs(this,&Farbe,&OK);//Aufrufen des Dialoges zum erstellen des Neuen Kurses.
+    int Rythmus;
+    QString Name=NeuerKursEingabe::GetNeuerKurs(this,&Farbe,&OK,&Rythmus);//Aufrufen des Dialoges zum erstellen des Neuen Kurses.
     if(OK)//Rückgabe auswerten
     {
         Kurs* Neues=Kurse.addKurs(Name);//Erzeugen des Neuenkurses und setzen der Übergebenen Eigenschaften.
         Neues->setQFarbe(Farbe);
+        Neues->setRythmus(Rythmus);
         ui->tableView->setModel(Neues);
         Auswahl=Kurse.size()-1;
         Graphik.DatenGeaendert();//Diagramm über die Änderung Informiren.
@@ -160,6 +171,7 @@ void MainWindow::selectionChangedSlot(const QItemSelection& neu  , const QItemSe
         return;
     Auswahl=neu.indexes().first().row();//Speicher die Zeilennummer des Ausgewählten Kurses in einer Klassen Variable.
     ui->tableView->setModel(Kurse[Auswahl]);//Änder in der tableview die Angezeigte Tabelle
+    setWoche();
 }
 
 //! Leitet das Speichern der Daten ein.

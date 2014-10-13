@@ -162,16 +162,36 @@ bool Liste::loadxmlfile(QFile *Datei)
             continue;
         if (kurs.tagName()=="Kurs")//Prüft ob es sich um Einen Kurs handelt sonst wird es ignorirt
         {
-            QDomElement xmlelement=kurs.elementsByTagName("Name").item(0).toElement();//Sucht den Namen des Kurses
+            QDomNode elementnode=kurs.elementsByTagName("Name").item(0);
+            if (elementnode.isNull())
+            {
+                xmlkurs.nextSibling();
+                continue;
+            }
+            QDomElement xmlelement=elementnode.toElement();//Sucht den Namen des Kurses
             Kurs* Neu=addKurs(xmlelement.text());//Erstellt einen Neuen Kurs im Arbeistsspeicher
-            xmlelement=kurs.elementsByTagName("Farbe").item(0).toElement();//Sucht die Farbe des Kurses
-            Neu->setFarbe(xmlelement.text().toInt());//Setzt die Farbe des Altuellen Kurses
+            elementnode=kurs.elementsByTagName("Farbe").item(0);//Sucht die Farbe des Kurses
+            if (elementnode.isNull())//Prüft ob es Vorhanden ist.
+            {
+                Neu->setQFarbe(Qt::lightGray);
+            }
+            else
+            {
+                xmlelement=elementnode.toElement();
+                Neu->setFarbe(xmlelement.text().toInt());//Setzt die Farbe des Altuellen Kurses
+            }
+            elementnode=kurs.elementsByTagName("Rythmus").item(0);//Sucht den Rythmus der Übungsblätter
+            if (!elementnode.isNull())
+            {
+               xmlelement=elementnode.toElement();
+               Neu->setRythmus(xmlelement.text().toInt());
+            }
             QDomNodeList XmlBlatter=kurs.elementsByTagName("Blatt");//Erstellt einen Liste Mit Den Blättern
             int anz=XmlBlatter.length();
             for (int i=0;i<anz;i++)//Iterirt über die Liste der Blätter
             {
                 QDomNode XmlEintrag=XmlBlatter.item(i).toElement().firstChild();
-                int max=0,err=0;
+                int max=0,err=0,woche=0;
                 while(!XmlEintrag.isNull())//Arbeitet alle Kinder eines Blattes ab.
                 {
                     QDomElement Eintrag=XmlEintrag.toElement();
@@ -180,9 +200,11 @@ bool Liste::loadxmlfile(QFile *Datei)
                         max=Eintrag.text().toInt();
                     if (text=="ErreichtePunkte")
                         err=Eintrag.text().toInt();
+                    if (text=="Woche")
+                        woche=Eintrag.text().toInt();
                     XmlEintrag=XmlEintrag.nextSibling();
                 }
-                Neu->addBlatt(max,err);//Erzeugt ein Blatt mit den gewonnen informationen
+                Neu->addBlatt(max,err,woche);//Erzeugt ein Blatt mit den gewonnen informationen
             }
         }
         xmlkurs=xmlkurs.nextSibling();
@@ -213,7 +235,7 @@ bool Liste::savecvsfile(QFile *Datei)
     int Max=this->maxBlatter();//Variable zum Speichern der Maxiamlaanzahl von Blättern.
     for(int i=0;i<this->size();++i)//Abeitet alle Kurse Ab und Schreibt die Kopfzeile der Tabelle
     {
-        Ausgabe<<Kurse[i]->getName()<<";"<<Kurse[i]->getFarbe()<<";";
+        Ausgabe<<Kurse[i]->getName()<<";"<<Kurse[i]->getFarbe()<<";"<<Kurse[i]->getRythmus()<<";";
     }
     Ausgabe<<endl;
     for(int i=0;i<Max;++i)//Get die Kanzen Blätter aller Kurse durch.
@@ -223,7 +245,7 @@ bool Liste::savecvsfile(QFile *Datei)
             int anz=Kurse[ii]->anzBlaetter();
             if(i<anz)//Prüft ob Speicherzugriffs Fehler aufterten könnten.
             {
-                Ausgabe<<Kurse[ii]->getBlattMax(i)<<";"<<Kurse[ii]->getBlattErreicht(i)<<";";//Schreibt die Daten in die Datei.
+                Ausgabe<<Kurse[ii]->getBlattMax(i)<<";"<<Kurse[ii]->getBlattErreicht(i)<<";"<<Kurse[ii]->getBlattWoche(i)<<";";//Schreibt die Daten in die Datei.
             }
             else
                 Ausgabe<<";;";//Sonst wird ein Platzhalter verwendet.
@@ -249,11 +271,13 @@ bool Liste::savexmlfile(QFile *Datei)
         Ausgabe.writeStartElement("Kurs");//Beginnt das Element des aktuellen Kurses.
         Ausgabe.writeTextElement("Name",Element->getName());//Schreibt den Namen des Aktuellen Kurses.
         Ausgabe.writeTextElement("Farbe",QString::number(Element->getFarbe()));//Schreibt die Farbe des Aktuellen Kurses.
+        Ausgabe.writeTextElement("Rythmus",QString::number(Element->getRythmus()));//Schreibt den Rythmus des aktuellen Kurses.
         for(int i=0;i<Element->anzBlaetter();i++)
         {
             Ausgabe.writeStartElement("Blatt");//Öffnet das Element für das aktuelle Blatt.
             Ausgabe.writeTextElement("MaxPunkte",QString::number(Element->getBlattMax(i)));//Schreibt die Maximal Erreichbare Punktzahl
             Ausgabe.writeTextElement("ErreichtePunkte",QString::number(Element->getBlattErreicht(i)));//Schreibt die Erreichte Punktzahl
+            Ausgabe.writeTextElement("Woche",QString::number(Element->getBlattWoche(i)));//Schreibt die Woche des Übungsblattes.
             Ausgabe.writeEndElement();//Schließt das aktuelle Blatt.
         }
         Ausgabe.writeEndElement();//Schließt das element des Aktuellen Kurses.

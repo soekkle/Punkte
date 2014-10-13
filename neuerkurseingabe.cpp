@@ -27,6 +27,7 @@ NeuerKursEingabe::~NeuerKursEingabe()
 void NeuerKursEingabe::accept()
 {
     Name=ui->lineEdit->text();
+    Rythmus=ui->spinBox->value();
     if (Name!="")//Prüft ob ein Kursname eingegeben wurde
         Erfolgreich=true;
     close();//Schließt das aktuelle Dialogfenster
@@ -44,12 +45,13 @@ void NeuerKursEingabe::ButtonFarbe()
  *@param *Ok ist true wenn der Dialog mit OK Beendet wurde sonst false
  *@return Name des Neuen Kurses
 */
-QString NeuerKursEingabe::GetNeuerKurs(QWidget *parent,QColor *Farbe, bool *Ok)
+QString NeuerKursEingabe::GetNeuerKurs(QWidget *parent,QColor *Farbe, bool *Ok,int *Rythmus)
 {
     NeuerKursEingabe *Maske=new NeuerKursEingabe(parent);//Erzeugt ein neues Dialog Objekt.
     Maske->exec();//Führ den Dialog aus.
     *Ok=Maske->Erfolgreich;//Schreibt die Ausgewählten werte zurück.
     *Farbe=Maske->Farbwahl;
+    *Rythmus=Maske->Rythmus;
     return Maske->Name;
 }
 
