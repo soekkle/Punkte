@@ -1,12 +1,6 @@
 #include "neuerkurseingabe.h"
 #include "ui_neuerkurseingabe.h"
 
-/*!
- *@autor soekkle
- *@date 17.02.14
- *@version 0.1
-*/
-
 int NeuerKursEingabe::nextColorint=-1;
 
 NeuerKursEingabe::NeuerKursEingabe(QWidget *parent) :
@@ -36,6 +30,29 @@ void NeuerKursEingabe::accept()
 void NeuerKursEingabe::ButtonFarbe()
 {
     Farbwahl=QColorDialog::getColor(Farbwahl,this,"Kurs Farbe");
+}
+
+/*!
+ * \brief NeuerKursEingabe::EditKurs Startet einen Dialog der mit den Angegebenen Daten Ausgefüllt ist.
+ * \param parent
+ * \param Name Name Des zu berarbeiten Kurses
+ * \param Farbe Farbe des Kurses
+ * \param Rythmus Rythmus des Kurses
+ * \return Ob die Daten verändert wurden.
+ */
+bool NeuerKursEingabe::EditKurs(QWidget *parent, QString *Name, QColor *Farbe, int *Rythmus)
+{
+    NeuerKursEingabe *Maske=new NeuerKursEingabe(parent);//Erzeugt ein neues Dialog Objekt.
+    Maske->setData(*Name,*Farbe,*Rythmus);
+    Maske->exec();
+    if (Maske->Erfolgreich)
+    {
+        *Name=Maske->Name;
+        *Farbe=Maske->Farbwahl;
+        *Rythmus=Maske->Rythmus;
+        return true;
+    }
+    return false;
 }
 
 //! Zeigt den Dialog zum Erstellren des Neuen Kurses
@@ -83,4 +100,13 @@ QColor NeuerKursEingabe::nextColor()
 void NeuerKursEingabe::rejected()
 {
     Erfolgreich=false;//Setzt Alles auf Falses
+}
+
+void NeuerKursEingabe::setData(QString Name, QColor Farbe, int Rythmus)
+{
+    this->Name=Name;
+    this->Farbwahl=Farbe;
+    this->Rythmus=Rythmus;
+    ui->lineEdit->setText(Name);
+    ui->spinBox->setValue(Rythmus);
 }

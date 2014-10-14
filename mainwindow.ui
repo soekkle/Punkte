@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>521</width>
-    <height>272</height>
+    <width>566</width>
+    <height>299</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -123,7 +123,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>521</width>
+     <width>566</width>
      <height>22</height>
     </rect>
    </property>
@@ -147,6 +147,7 @@
     <addaction name="actionNeuer_Kurs"/>
     <addaction name="actionNeues_Blatt"/>
     <addaction name="separator"/>
+    <addaction name="actionKurs_Bearbeiten"/>
     <addaction name="actionFarbe_W_hlen"/>
    </widget>
    <widget class="QMenu" name="menuHilfe">
@@ -240,6 +241,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="actionKurs_Bearbeiten">
+   <property name="text">
+    <string>Kurs Bearbeiten</string>
    </property>
   </action>
  </widget>

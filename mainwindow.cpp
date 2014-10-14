@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_ber_Qt,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
     connect(ui->actionFarbe_W_hlen,SIGNAL(triggered()),this,SLOT(slotFarbe()));
     connect(ui->actionDiagramm_anzeigen,SIGNAL(triggered()),&Graphik,SLOT(show()));
+    connect(ui->actionKurs_Bearbeiten,SIGNAL(triggered()),this,SLOT(slotKursBearbeiten()));
     ui->listView->setModel(&Kurse);
     Auswahl=-1;
     SpeicherOrt="";
@@ -103,6 +104,20 @@ void MainWindow::slotFarbe()
         return;
     Kurse[Auswahl]->setQFarbe(QColorDialog::getColor(Kurse[Auswahl]->getQColor(),this,"Kurs Farbe"));//Ruft einen getColor Dialog auf und speichert den zurückgegeben wert in den Kurs.
     Graphik.DatenGeaendert();//Läst das Diagramm neuzeichnen.
+}
+
+void MainWindow::slotKursBearbeiten()
+{
+    Kurs *ausgewaehlt=Kurse[Auswahl];
+    QString Name=ausgewaehlt->getName();
+    QColor Farbe=ausgewaehlt->getQColor();
+    int Rythmus=ausgewaehlt->getRythmus();
+    if (NeuerKursEingabe::EditKurs(this,&Name,&Farbe,&Rythmus))
+    {
+        ausgewaehlt->setName(Name);
+        ausgewaehlt->setQFarbe(Farbe);
+        ausgewaehlt->setRythmus(Rythmus);
+    }
 }
 
 //! Solt der Das Laden von datein startet.

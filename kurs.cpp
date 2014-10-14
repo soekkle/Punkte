@@ -228,6 +228,14 @@ void Kurs::setFarbe(int Farbe)
     this->Farbe=Farbe&0xffffff;
 }
 
+void Kurs::setName(QString Name)
+{
+    if(!Name.isEmpty())
+    {
+        this->KursName=Name;
+    }
+}
+
 void Kurs::setQFarbe(QColor Farbe)
 {
     int r,g,b;

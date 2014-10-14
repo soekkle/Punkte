@@ -39,6 +39,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
     Qt::ItemFlags flags(const QModelIndex &index) const;
     void setFarbe(int Farbe);
+    void setName(QString Name);
     void setQFarbe(QColor Farbe);
     void setRythmus(int Rythmus);
 private:

@@ -49,6 +49,7 @@ private slots:
     void slotFarbe();
     void slotNeuesBlatt();
     void slotNeuerKurs();
+    void slotKursBearbeiten();
     void slotLaden();
     bool slotSpeichern();
     void slotSpeichernunter();
