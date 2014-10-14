@@ -7,6 +7,12 @@
 #include <QXmlStreamWriter>
 #include <QDomDocument>
 
+/*!
+ *@autor soekkle
+ *@date 14.10.14
+ *@version 0.2
+*/
+
 class Liste : public QAbstractTableModel
 {
 public:

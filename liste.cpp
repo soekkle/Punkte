@@ -1,11 +1,5 @@
 #include "liste.h"
 
-/*!
- *@autor soekkle
- *@date 17.02.14
- *@version 0.1
-*/
-
 Liste::Liste()
 {
 }
@@ -111,8 +105,12 @@ bool Liste::loadcvsfile(QFile *Datei)
         Kurs* Neu=addKurs(Teil);
         Zeile=Zeile.right(Zeile.length()-Pos-1); //Verkürzen der Zeichenkette
         Pos=Zeile.indexOf(';');//Suche nächstes Trennzeichen
-        Teil=Zeile.left(Pos);//Auslesen der Farbe als int
+        Teil=Zeile.left(Pos);//Auslesen der Farbe als String
         Neu->setFarbe(Teil.toInt());//Setzen der Fabe des Kurses
+        Zeile=Zeile.right(Zeile.length()-Pos-1);//Verkürzen der Zeichenkette
+        Pos=Zeile.indexOf(';');
+        Teil=Zeile.left(Pos);//Auslesen des Rythmuses als String
+        Neu->setRythmus(Teil.toInt());
         Zeile=Zeile.right(Zeile.length()-Pos-1);//Verkürzen der Zeichenkette
         Pos=Zeile.indexOf(';');
     }
@@ -129,7 +127,11 @@ bool Liste::loadcvsfile(QFile *Datei)
             QString Teil2=Zeile.left(Pos);//Auslesen der Erreichten Punktzahl
             Zeile=Zeile.right(Zeile.length()-Pos-1);
             Pos=Zeile.indexOf(';');
-            Kurse[i]->addBlatt(Teil1.toInt(),Teil2.toInt());//Setzen Der Gelesenen Werte in den Entsprechenden Kurs
+            QString Teil3=Zeile.left(Pos);//Auslesen der Woche des Blattes
+            Zeile=Zeile.right(Zeile.length()-Pos-1);
+            Pos=Zeile.indexOf(';');
+            if (!((Teil1.length()==0)||(Teil2.length()==0)||Teil3==0))
+                Kurse[i]->addBlatt(Teil1.toInt(),Teil2.toInt(),Teil3.toInt());//Setzen Der Gelesenen Werte in den Entsprechenden Kurs
             ++i;//Erhöhen des Zählers
         }
         while (-1<Pos);
@@ -248,7 +250,7 @@ bool Liste::savecvsfile(QFile *Datei)
                 Ausgabe<<Kurse[ii]->getBlattMax(i)<<";"<<Kurse[ii]->getBlattErreicht(i)<<";"<<Kurse[ii]->getBlattWoche(i)<<";";//Schreibt die Daten in die Datei.
             }
             else
-                Ausgabe<<";;";//Sonst wird ein Platzhalter verwendet.
+                Ausgabe<<";;;";//Sonst wird ein Platzhalter verwendet.
         }
         Ausgabe<<endl;
     }
