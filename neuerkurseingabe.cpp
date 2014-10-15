@@ -44,14 +44,17 @@ bool NeuerKursEingabe::EditKurs(QWidget *parent, QString *Name, QColor *Farbe, i
 {
     NeuerKursEingabe *Maske=new NeuerKursEingabe(parent);//Erzeugt ein neues Dialog Objekt.
     Maske->setData(*Name,*Farbe,*Rythmus);
+    Maske->setWindowTitle("Kurs bearbeiten");
     Maske->exec();
     if (Maske->Erfolgreich)
     {
         *Name=Maske->Name;
         *Farbe=Maske->Farbwahl;
         *Rythmus=Maske->Rythmus;
+        delete Maske;
         return true;
     }
+    delete Maske;
     return false;
 }
 
@@ -69,7 +72,9 @@ QString NeuerKursEingabe::GetNeuerKurs(QWidget *parent,QColor *Farbe, bool *Ok,i
     *Ok=Maske->Erfolgreich;//Schreibt die Ausgewählten werte zurück.
     *Farbe=Maske->Farbwahl;
     *Rythmus=Maske->Rythmus;
-    return Maske->Name;
+    QString Name=Maske->Name;
+    delete Maske;
+    return Name;
 }
 
 //! Gibt bei jeden Aufruf einen ander Farbe wieder

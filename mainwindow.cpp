@@ -59,7 +59,10 @@ void MainWindow::closeEvent( QCloseEvent *event )
     }
     if(Aussage==QMessageBox::Save)//Nach Save wird die Eingabe gespeichert.
         if (!slotSpeichern())
+        {
             event->ignore();
+            return;
+        }
     Graphik.close();
     event->accept();
 }
@@ -87,6 +90,12 @@ bool MainWindow::laden()
     if(Dateityp==2)
         Erfolgreich=Kurse.loadxmlfile(&Datei);
     Datei.close();//Schließt die Datei
+    if (!Erfolgreich)
+    {
+        leeren();
+        QMessageBox::warning(this,"Fehler beim Laden",QString("Es ist ein Fehler beim Laden der Datei \"%1\" aufgeterten.\nDie Datei wurde nicht geladen.").arg(SpeicherOrt));
+    }
+    Graphik.DatenGeaendert();
     return Erfolgreich;//Gibt zurück das die Datei Erfolgreich gelesen wurde
 }
 
@@ -118,6 +127,7 @@ void MainWindow::slotKursBearbeiten()
         ausgewaehlt->setQFarbe(Farbe);
         ausgewaehlt->setRythmus(Rythmus);
     }
+    Graphik.DatenGeaendert();
 }
 
 //! Solt der Das Laden von datein startet.

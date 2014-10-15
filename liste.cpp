@@ -105,10 +105,18 @@ bool Liste::loadcvsfile(QFile *Datei)
         Kurs* Neu=addKurs(Teil);
         Zeile=Zeile.right(Zeile.length()-Pos-1); //Verkürzen der Zeichenkette
         Pos=Zeile.indexOf(';');//Suche nächstes Trennzeichen
+        if (Pos==-1)
+        {
+            return false;
+        }
         Teil=Zeile.left(Pos);//Auslesen der Farbe als String
         Neu->setFarbe(Teil.toInt());//Setzen der Fabe des Kurses
         Zeile=Zeile.right(Zeile.length()-Pos-1);//Verkürzen der Zeichenkette
         Pos=Zeile.indexOf(';');
+        if (Pos==-1)
+        {
+            return false;
+        }
         Teil=Zeile.left(Pos);//Auslesen des Rythmuses als String
         Neu->setRythmus(Teil.toInt());
         Zeile=Zeile.right(Zeile.length()-Pos-1);//Verkürzen der Zeichenkette

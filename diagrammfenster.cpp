@@ -9,16 +9,20 @@ DiagrammFenster::DiagrammFenster(QWidget *parent) :
     offen=false;
     Zeichnung=NULL;
     Graphik=NULL;
+    connect(ui->actionSchlie_en,SIGNAL(triggered()),this,SLOT(close()));
 }
 
 DiagrammFenster::~DiagrammFenster()
 {
+    if (Zeichnung!=NULL)
+        delete Zeichnung;
     delete ui;
 }
 
 void DiagrammFenster::closeEvent(QCloseEvent *event)
 {
-    delete Zeichnung;
+    delete Graphik;
+    Graphik=NULL;
     offen=false;//Setzen, dass das geschlossen ist.
     event->accept();
     return;
@@ -64,7 +68,8 @@ void DiagrammFenster::Zeichnen()
 {
     if (Zeichnung==NULL&&(!offen))
         return;
-    delete Graphik;
+    if (Graphik!=NULL)
+        delete Graphik;
     Graphik=Zeichnung->Ausgabe();
     ui->DiagrammView->setScene(Graphik);
     return;
