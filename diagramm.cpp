@@ -1,27 +1,11 @@
 #include "diagramm.h"
-#include "ui_diagramm.h"
-/*!
- *@autor soekkle
- *@date 17.02.14
- *@version 0.1
-*/
 
-Diagramm::Diagramm(QWidget *parent):
-    QWidget(parent),
-    ui(new Ui::Diagramm)
+Diagramm::Diagramm(Liste *Kurse,QWidget *parent = 0)
 {
-    ui->setupUi(this);
-    offen=false;
-    Breite=ui->graphicsView->width();
-    Hoehe=ui->graphicsView->height();
-    Kurse=NULL;
+    this->Kurse=Kurse;
+    Parent=parent;
 }
 
-Diagramm::~Diagramm()
-{
-    delete ui;
-}
-//! Die Funktion Berechnet die Anzahl der Striche für die Achsen somie die Scallierung
 /*!
  *Berechnet wie die Achsen Gezeichnet werden sollen. Und Das Diagram in Eine Richtung Scallirt werden soll.
  *@param[in] Stuffen Anzahl der Stuffen für die Scalliert werden soll.
@@ -46,73 +30,16 @@ int Diagramm::anzSchritte(int Stuffen, int Lange, float *Schritt)
     }
     return Stuffen;//Wiedergabe des Berechneten wertes.
 }
-//! Wirde Beim Schließen Ausgeführt
-/*!
- *Leert die Zeichnung.
-*/
-void Diagramm::closeEvent(QCloseEvent *event)
-{
-    delete Zeichnung;
-    offen=false;//Setzen, dass das geschlossen ist.
-    event->accept();
-}
-//! Aktuallisiert die Angezeigten Daten
-void Diagramm::DatenGeaendert()
-{
-    if (offen)
-        zeichnen();
-}
-//! Passt die Größe der Zeichnung der Fenstergröße an.
-void Diagramm::resizeEvent(QResizeEvent *)
-{
-    if (offen)//Prüfen ob die Zeichnung angezeigt wird.
-    {
-        Breite=ui->graphicsView->width()-15;//Setzen der Neuen Größe in den Privaten Variablen.
-        Hoehe=ui->graphicsView->height()-15;
-        zeichnen();//Diagramm neu Zeichnen Lassen.
-    }
-}
-//! Setzt die übergebene Liste zum Zeichnen
-/*!
- *@param[in] newListe Pinter auf die Neue Liste.
-*/
-void Diagramm::setListe(Liste *newListe)
-{
-    if (newListe!=NULL)//Prüft ob ein NULL-Pointer Übergeben wurde
-        Kurse=newListe;
-}
 
-//! Öfnnet das Diagrammfenster
-/*!
- *Wenn noch nicht das Diagrammfenster offen ist wird es geöffnet,
-*/
-void Diagramm::show()
+
+QGraphicsScene* Diagramm::Ausgabe()
 {
-    if (offen)
-        return;
-    QWidget::show();
-    Breite=ui->graphicsView->width()-15;
-    Hoehe=ui->graphicsView->height()-15;
-    zeichnen();
-    offen=true;
-}
-//! Zeichnet das Diagramm
-/*!
- *Die Funktion Zeichnet Das Diagramm in das Fenstr hinnein
-*/
-void Diagramm::zeichnen()
-{
-    if (Kurse==NULL)//Prüft ob ein NULL Pointer vorliegt.
-        return;
-    if (offen)//Wenn Schon eine Zeichenfläche Existert wird sie Gelöscht.
-        delete Zeichnung;
-    Zeichnung=new QGraphicsScene(this);//Erstellt einen Neuezeichenfläche
-    ui->graphicsView->setScene(Zeichnung);
+    QGraphicsScene* Zeichnung=new QGraphicsScene(Parent);
     int Blatter=Kurse->maxBlatter();//Ruft die Maximale Anzahl von Blättern ab.
-    zeichneYAchse(50,25,Hoehe-25);//Zeichnet eine X-Achse
-    float Schritt=zeichneXAchse(50,Hoehe,Breite-50,Blatter-1);
+    zeichneYAchse(Zeichnung,50,25,Hoehe-25);//Zeichnet eine X-Achse
+    float Schritt=zeichneXAchse(Zeichnung,50,Hoehe,Breite-50,Blatter-1);
     if (Blatter==0)//Bricht bei 0 Blättern ab.
-        return;
+        return NULL;
     for (vector<Kurs*>::const_iterator iter=Kurse->begin();iter!=Kurse->end();++iter)
     {
         Kurs *Element=*iter;
@@ -128,8 +55,17 @@ void Diagramm::zeichnen()
         QPen Farbe(Element->getQColor());//Setzt die Farbe
         Zeichnung->addPath(Linie,Farbe);//Zeichnet das Element.
     }
+    return Zeichnung;
 }
-//! Zeichnet die X-Achse in ein Diagramm
+
+void Diagramm::setMaase(int Breite, int Hoehe)
+{
+    if ((Breite>0)&&(Breite<5000))
+        this->Breite=Breite;
+    if ((Hoehe>0)&&(Hoehe<5000))
+        this->Hoehe=Hoehe;
+}
+
 /*!
  * \brief Diagramm::zeichneXAchse
  * \param x x Kordionate des Startpunkt der x-Achse
@@ -137,7 +73,7 @@ void Diagramm::zeichnen()
  * \param Lange Länge der x-Achse
  * \param Elemente Anzahl der Unterteilungen
  */
-float Diagramm::zeichneXAchse(int x, int y, int Lange, int Elemente)
+float Diagramm::zeichneXAchse(QGraphicsScene* Zeichnung,int x, int y, int Lange, int Elemente)
 {
     Zeichnung->addLine(x,y,x+Lange,y);//Fügt die Linie der X-Achse Hinzu.
     QGraphicsTextItem * Text = new QGraphicsTextItem;//Objekt für die Texte der Legende.
@@ -157,14 +93,14 @@ float Diagramm::zeichneXAchse(int x, int y, int Lange, int Elemente)
     }
     return Weite/EleSchritt;
 }
-//! Zeichnet die Y-Achse in ein Diagramm
+
 /*!
  * \brief Diagramm::zeichneYAchse
  * \param x x Kordionate des Startpunkt der y-Achse
  * \param y y Kordionate des Startpunkt der y-Achse
  * \param Lange Länge der y-Achse
  */
-void Diagramm::zeichneYAchse(int x, int y, int Lange)
+void Diagramm::zeichneYAchse(QGraphicsScene *Zeichnung,int x, int y, int Lange)
 {
     Zeichnung->addLine(x,y,x,y+Lange);
     /*Zeichnung->addLine(x-15,y+15,x,y);

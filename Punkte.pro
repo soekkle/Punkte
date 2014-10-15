@@ -17,17 +17,19 @@ SOURCES += main.cpp\
     kurs.cpp \
     liste.cpp \
     neuerkurseingabe.cpp \
+    diagrammfenster.cpp \
     diagramm.cpp
 
 HEADERS  += mainwindow.h \
     kurs.h \
     liste.h \
     neuerkurseingabe.h \
+    diagrammfenster.h \
     diagramm.h
 
 FORMS    += mainwindow.ui \
     neuerkurseingabe.ui \
-    diagramm.ui
+    diagrammfenster.ui
 
 OTHER_FILES += \
     README.md

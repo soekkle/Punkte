@@ -1,41 +1,27 @@
 #ifndef DIAGRAMM_H
 #define DIAGRAMM_H
 
-#include <QWidget>
-#include <QCloseEvent>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
+#include <QWidget>
 #include "liste.h"
 
-namespace Ui {
-class Diagramm;
-}
-
-class Diagramm : public QWidget
+class Diagramm
 {
-    Q_OBJECT
-    
 public:
-    explicit Diagramm(QWidget *parent = 0);
-    ~Diagramm();
-    void setListe(Liste* newListe);
-public slots:
-    void DatenGeaendert();
-    void show();
-protected:
-    void closeEvent(QCloseEvent *event);
-    void resizeEvent(QResizeEvent *event);
+    Diagramm(Liste *Kurse, QWidget *parent);
+    QGraphicsScene* Ausgabe();
+    void setMaase(int Breite,int Hoehe);
 private:
-    Ui::Diagramm *ui;
     int Breite;
     int Hoehe;
-    Liste* Kurse;
-    bool offen;
-    QGraphicsScene *Zeichnung;
-    int anzSchritte(int Stuffen,int Lange,float *Schritt);
-    void zeichnen();
-    float zeichneXAchse(int x,int y,int Lange,int Elemente);
-    void zeichneYAchse(int x,int y,int Lange);
+    Liste *Kurse;
+    QWidget *Parent;
+    int anzSchritte(int Stuffen, int Lange, float *Schritt);
+    //! Zeichnet die X-Achse in ein Diagramm
+    float zeichneXAchse(QGraphicsScene* Zeichnung, int x, int y, int Lange, int Elemente);
+    //! Zeichnet die Y-Achse in ein Diagramm
+    void zeichneYAchse(QGraphicsScene *Zeichnung, int x, int y, int Lange);
 };
 
 #endif // DIAGRAMM_H

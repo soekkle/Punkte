@@ -14,7 +14,7 @@
 #include "kurs.h"
 #include "liste.h"
 #include "neuerkurseingabe.h"
-#include "diagramm.h"
+#include "diagrammfenster.h"
 
 namespace Ui {
 class MainWindow;
@@ -36,7 +36,7 @@ private:
     Liste Kurse;
     int Auswahl;
     QString SpeicherOrt;
-    Diagramm Graphik;
+    DiagrammFenster Graphik;
     void setWoche();
     QString SpeichernDialog();
     bool Speichern();
