@@ -4,6 +4,7 @@ Diagramm::Diagramm(Liste *Kurse,QWidget *parent = 0)
 {
     this->Kurse=Kurse;
     Parent=parent;
+    zHilfsLinien=false;
 }
 
 /*!
@@ -55,7 +56,28 @@ QGraphicsScene* Diagramm::Ausgabe()
         QPen Farbe(Element->getQColor());//Setzt die Farbe
         Zeichnung->addPath(Linie,Farbe);//Zeichnet das Element.
     }
+    if (zHilfsLinien)
+    {
+        float xstart,xende,y;
+        xstart=50;
+        xende=Breite;
+        y=25+(Hoehe-25)/2;
+        QPen Gestrichelt(Qt::lightGray,1,Qt::DashLine);
+        Zeichnung->addLine(xstart,y,xende,y,Gestrichelt);//Zeichnet einen Hilfslinie bei 50%
+        y=25+(Hoehe-25)/4;
+        Zeichnung->addLine(xstart,y,xende,y,Gestrichelt);//Zeichnent einen Hilfslinie bei 75%
+    }
     return Zeichnung;
+}
+
+void Diagramm::disableHilfsLinien()
+{
+    zHilfsLinien=false;
+}
+
+void Diagramm::enableHilfsLinien()
+{
+    zHilfsLinien=true;
 }
 
 void Diagramm::setMaase(int Breite, int Hoehe)

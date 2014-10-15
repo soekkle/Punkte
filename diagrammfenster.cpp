@@ -9,6 +9,7 @@ DiagrammFenster::DiagrammFenster(QWidget *parent) :
     offen=false;
     Zeichnung=NULL;
     Graphik=NULL;
+    connect(ui->actionHilfs_Lienien_anzeigen,SIGNAL(triggered(bool)),this,SLOT(hilfslinien(bool)));
 }
 
 DiagrammFenster::~DiagrammFenster()
@@ -28,6 +29,16 @@ void DiagrammFenster::DatenGeaendert()
 {
     if (offen)
         Zeichnen();
+    return;
+}
+
+void DiagrammFenster::hilfslinien(bool tiggert)
+{
+    if (tiggert)
+        Zeichnung->enableHilfsLinien();
+    else
+        Zeichnung->disableHilfsLinien();
+    Zeichnen();
     return;
 }
 

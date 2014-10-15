@@ -30,6 +30,8 @@ private:
     bool offen;
     Diagramm *Zeichnung;
     void Zeichnen();
+private slots:
+    void hilfslinien(bool tiggert);
 };
 
 #endif // DIAGRAMMFENSTER_H

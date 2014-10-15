@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>563</width>
-     <height>22</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDatei">
@@ -39,6 +39,7 @@
     <property name="title">
      <string>Ansicht</string>
     </property>
+    <addaction name="actionHilfs_Lienien_anzeigen"/>
    </widget>
    <addaction name="menuDatei"/>
    <addaction name="menuAnsicht"/>
@@ -47,6 +48,14 @@
   <action name="actionSchlie_en">
    <property name="text">
     <string>Schließen</string>
+   </property>
+  </action>
+  <action name="actionHilfs_Lienien_anzeigen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hilfs Lienien anzeigen</string>
    </property>
   </action>
  </widget>
