@@ -31,7 +31,8 @@ private:
     Diagramm *Zeichnung;
     void Zeichnen();
 private slots:
-    void hilfslinien(bool tiggert);
+    void hilfslinien(bool tiggered);
+    void einzelblaetter(bool tiggered);
 };
 
 #endif // DIAGRAMMFENSTER_H

@@ -10,6 +10,7 @@ DiagrammFenster::DiagrammFenster(QWidget *parent) :
     Zeichnung=NULL;
     Graphik=NULL;
     connect(ui->actionHilfs_Lienien_anzeigen,SIGNAL(triggered(bool)),this,SLOT(hilfslinien(bool)));
+    connect(ui->actionEinzelBl_tter,SIGNAL(triggered(bool)),this,SLOT(einzelblaetter(bool)));
 }
 
 DiagrammFenster::~DiagrammFenster()
@@ -32,9 +33,19 @@ void DiagrammFenster::DatenGeaendert()
     return;
 }
 
-void DiagrammFenster::hilfslinien(bool tiggert)
+void DiagrammFenster::einzelblaetter(bool tiggered)
 {
-    if (tiggert)
+    if (tiggered)
+        Zeichnung->enableEinzelBlaetter();
+    else
+        Zeichnung->disableEinzelBlaetter();
+    Zeichnen();
+    return;
+}
+
+void DiagrammFenster::hilfslinien(bool tiggered)
+{
+    if (tiggered)
         Zeichnung->enableHilfsLinien();
     else
         Zeichnung->disableHilfsLinien();

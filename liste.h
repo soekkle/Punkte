@@ -36,7 +36,10 @@ public:
     //! Speichert den Inhalt in einer xml-Tabelle
     bool savexmlfile(QFile *Datei);
     int size();
+    //! Liefert die Maximale Anzahl an Blättern zurück.
     int maxBlatter();
+    //! Liefet die Größe Benutzte Woche zurück
+    int maxWoche();
 private:
     vector<Kurs*> Kurse;
 };

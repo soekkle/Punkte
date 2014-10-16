@@ -48,13 +48,15 @@ QGraphicsScene* Diagramm::Ausgabe()
         {
             continue;
         }
-        QPainterPath Linie(QPointF(50,25+(Hoehe-25)*(1-Element->getVerhalt(0))));//Setzt den Startpunkt.
-        for (int i=1;i<Element->anzBlaetter();++i)
-        {
-            Linie.lineTo(QPointF(i*Schritt+50,25+(Hoehe-25)*(1-Element->getVerhalt(i)) ));//Setzt die Punkte der Linie
-        }
         QPen Farbe(Element->getQColor());//Setzt die Farbe
+        QPainterPath Linie=LinieGesamtBlaetter(Element,Schritt);
         Zeichnung->addPath(Linie,Farbe);//Zeichnet das Element.
+        if (EinzelBlaetter)
+        {
+            Farbe.setStyle(Qt::DotLine);
+            Linie=LinieEinzelBlaetter(Element,Schritt);
+            Zeichnung->addPath(Linie,Farbe);
+        }
     }
     if (zHilfsLinien)
     {
@@ -70,9 +72,19 @@ QGraphicsScene* Diagramm::Ausgabe()
     return Zeichnung;
 }
 
+void Diagramm::disableEinzelBlaetter()
+{
+    EinzelBlaetter=false;
+}
+
 void Diagramm::disableHilfsLinien()
 {
     zHilfsLinien=false;
+}
+
+void Diagramm::enableEinzelBlaetter()
+{
+    EinzelBlaetter=true;
 }
 
 void Diagramm::enableHilfsLinien()
@@ -88,8 +100,29 @@ void Diagramm::setMaase(int Breite, int Hoehe)
         this->Hoehe=Hoehe;
 }
 
+QPainterPath Diagramm::LinieEinzelBlaetter(Kurs *Element,double Schritt)
+{
+    QPainterPath Linie(QPointF(50,25+(Hoehe-25)*(1-Element->getVerhalt(0))));//Setzt den Startpunkt.
+    for (int i=1;i<Element->anzBlaetter();++i)
+    {
+        float Verhalt=Element->getBlattErreicht(i)/(double)Element->getBlattMax(i);
+        Linie.lineTo(QPointF(i*Schritt+50,25+(Hoehe-25)*(1-Verhalt) ));//Setzt die Punkte der Linie
+    }
+    return Linie;
+}
+
+QPainterPath Diagramm::LinieGesamtBlaetter(Kurs *Element, double Schritt)
+{
+    QPainterPath Linie(QPointF(50,25+(Hoehe-25)*(1-Element->getVerhalt(0))));//Setzt den Startpunkt.
+    for (int i=1;i<Element->anzBlaetter();++i)
+    {
+        Linie.lineTo(QPointF(i*Schritt+50,25+(Hoehe-25)*(1-Element->getVerhalt(i)) ));//Setzt die Punkte der Linie
+    }
+    return Linie;
+}
+
 /*!
- * \brief Diagramm::zeichneXAchse
+ * \brief Diagramm::zeichneXAchse zeichet die X-Achse auf die Übergebenen Zeichenfläche mit den Übergebenen Startpunkten.
  * \param x x Kordionate des Startpunkt der x-Achse
  * \param y y Kordionate des Startpunkt der x-Achse
  * \param Lange Länge der x-Achse

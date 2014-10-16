@@ -40,6 +40,8 @@
      <string>Ansicht</string>
     </property>
     <addaction name="actionHilfs_Lienien_anzeigen"/>
+    <addaction name="actionEinzelBl_tter"/>
+    <addaction name="actionWoche"/>
    </widget>
    <addaction name="menuDatei"/>
    <addaction name="menuAnsicht"/>
@@ -56,6 +58,25 @@
    </property>
    <property name="text">
     <string>Hilfs Lienien anzeigen</string>
+   </property>
+  </action>
+  <action name="actionEinzelBl_tter">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>EinzelBlätter anzeigen</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;EinzelBlätter anzeigen&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Zeigt den Prozentualen verlauf der Einzelnen Übungsblätter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionWoche">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Woche</string>
    </property>
   </action>
  </widget>
