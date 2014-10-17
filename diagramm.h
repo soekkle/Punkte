@@ -36,11 +36,15 @@ private:
     int Hoehe;
     Liste *Kurse;
     QWidget *Parent;
+    QPainterPath (*LinieEinzel)(Kurs* Element, double Schritt,int Hoehe);
+    QPainterPath (*LinieGesamt)(Kurs* Element, double Schritt,int Hoehe);
     bool zHilfsLinien,EinzelBlaetter,Woche;
     int anzSchritte(int Stuffen, int Lange, float *Schritt);
     //! Zeichnet die X-Achse in ein Diagramm
-    QPainterPath LinieEinzelBlaetter(Kurs* Element, double Schritt);
-    QPainterPath LinieGesamtBlaetter(Kurs* Element, double Schritt);
+    static QPainterPath LinieEinzelBlaetter(Kurs* Element, double Schritt,int Hoehe);
+    static QPainterPath LinieEinzelWoche(Kurs* Element, double Schritt,int Hoehe);
+    static QPainterPath LinieGesamtBlaetter(Kurs* Element, double Schritt, int Hoehe);
+    static QPainterPath LinieGesamtWoche(Kurs* Element, double Schritt,int Hoehe);
     float zeichneXAchse(QGraphicsScene* Zeichnung, int x, int y, int Lange, int Elemente);
     //! Zeichnet die Y-Achse in ein Diagramm
     void zeichneYAchse(QGraphicsScene *Zeichnung, int x, int y, int Lange);

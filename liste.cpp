@@ -304,3 +304,15 @@ int Liste::maxBlatter()
     }
     return max;
 }
+
+int Liste::maxWoche()
+{
+    int max=0;
+    for (vector<Kurs*>::const_iterator iter=begin();iter!=end();++iter)
+    {
+        Kurs* Element=*iter;
+        if (max<Element->getMaxWoche())
+            max=(Element->getMaxWoche());
+    }
+    return max;
+}

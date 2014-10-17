@@ -5,6 +5,8 @@ Diagramm::Diagramm(Liste *Kurse,QWidget *parent = 0)
     this->Kurse=Kurse;
     Parent=parent;
     zHilfsLinien=false;
+    EinzelBlaetter=false;
+    setXAcheBlatt();
 }
 
 /*!
@@ -36,10 +38,14 @@ int Diagramm::anzSchritte(int Stuffen, int Lange, float *Schritt)
 QGraphicsScene* Diagramm::Ausgabe()
 {
     QGraphicsScene* Zeichnung=new QGraphicsScene(Parent);
-    int Blatter=Kurse->maxBlatter();//Ruft die Maximale Anzahl von Blättern ab.
+    int anzElemente=0;
+    if (Woche)
+        anzElemente=Kurse->maxWoche()+1;//Ruft die Maximale Anzahl von Wochen ab.
+    else
+        anzElemente=Kurse->maxBlatter();//Ruft die Maximale Anzahl von Blättern ab.
     zeichneYAchse(Zeichnung,50,25,Hoehe-25);//Zeichnet eine X-Achse
-    float Schritt=zeichneXAchse(Zeichnung,50,Hoehe,Breite-50,Blatter-1);
-    if (Blatter==0)//Bricht bei 0 Blättern ab.
+    float Schritt=zeichneXAchse(Zeichnung,50,Hoehe,Breite-50,anzElemente-1);
+    if (anzElemente==0)//Bricht bei 0 Blättern ab.
         return NULL;
     for (vector<Kurs*>::const_iterator iter=Kurse->begin();iter!=Kurse->end();++iter)
     {
@@ -49,12 +55,12 @@ QGraphicsScene* Diagramm::Ausgabe()
             continue;
         }
         QPen Farbe(Element->getQColor());//Setzt die Farbe
-        QPainterPath Linie=LinieGesamtBlaetter(Element,Schritt);
+        QPainterPath Linie=LinieGesamt(Element,Schritt,Hoehe-25);
         Zeichnung->addPath(Linie,Farbe);//Zeichnet das Element.
         if (EinzelBlaetter)
         {
             Farbe.setStyle(Qt::DotLine);
-            Linie=LinieEinzelBlaetter(Element,Schritt);
+            Linie=LinieEinzel(Element,Schritt,Hoehe-25);
             Zeichnung->addPath(Linie,Farbe);
         }
     }
@@ -92,6 +98,64 @@ void Diagramm::enableHilfsLinien()
     zHilfsLinien=true;
 }
 
+QPainterPath Diagramm::LinieEinzelBlaetter(Kurs *Element,double Schritt,int Hoehe)
+{
+    QPainterPath Linie(QPointF(50,25+Hoehe*(1-Element->getVerhalt(0))));//Setzt den Startpunkt.
+    for (int i=1;i<Element->anzBlaetter();++i)
+    {
+        float Verhalt=Element->getBlattErreicht(i)/(double)Element->getBlattMax(i);
+        Linie.lineTo(QPointF(i*Schritt+50,25+Hoehe*(1-Verhalt) ));//Setzt die Punkte der Linie
+    }
+    return Linie;
+}
+
+QPainterPath Diagramm::LinieEinzelWoche(Kurs *Element, double Schritt,int Hoehe)
+{
+    int start=0;
+    double Verhalt=-1;
+    do
+    {
+        Verhalt=Element->getWocheVerhalt(start++);
+    }
+    while(Verhalt==-1);
+    QPainterPath Linie(QPointF(50+(start-1)*Schritt,25+Hoehe*(1-Verhalt)));//Setzt den Startpunkt.
+    for (int i=start;i<Element->getMaxWoche()+1;++i)
+    {
+        Verhalt=Element->getWocheVerhalt(i);
+        if (Verhalt==-1)
+                continue;
+        Linie.lineTo(QPointF(i*Schritt+50,25+Hoehe*(1-Verhalt) ));//Setzt die Punkte der Linie
+    }
+    return Linie;
+}
+
+QPainterPath Diagramm::LinieGesamtBlaetter(Kurs *Element, double Schritt,int Hoehe)
+{
+    QPainterPath Linie(QPointF(50,25+Hoehe*(1-Element->getVerhalt(0))));//Setzt den Startpunkt.
+    for (int i=1;i<Element->anzBlaetter();++i)
+    {
+        Linie.lineTo(QPointF(i*Schritt+50,25+Hoehe*(1-Element->getVerhalt(i)) ));//Setzt die Punkte der Linie
+    }
+    return Linie;
+}
+
+QPainterPath Diagramm::LinieGesamtWoche(Kurs *Element, double Schritt,int Hoehe)
+{
+    int start=0;
+    double Verhalt=-1;
+    do
+    {
+        Verhalt=Element->getWocheVerhalt(start++);
+    }
+    while(Verhalt==-1);
+    QPainterPath Linie(QPointF(50+(start-1)*Schritt,25+Hoehe*(1-Verhalt)));//Setzt den Startpunkt.
+    for (int i=start;i<Element->getMaxWoche()+1;++i)
+    {
+        Linie.lineTo(QPointF(i*Schritt+50,25+Hoehe*(1-Element->getWochenVerhalt(i)) ));//Setzt die Punkte der Linie
+    }
+    return Linie;
+}
+
 void Diagramm::setMaase(int Breite, int Hoehe)
 {
     if ((Breite>0)&&(Breite<5000))
@@ -100,25 +164,18 @@ void Diagramm::setMaase(int Breite, int Hoehe)
         this->Hoehe=Hoehe;
 }
 
-QPainterPath Diagramm::LinieEinzelBlaetter(Kurs *Element,double Schritt)
+void Diagramm::setXAcheBlatt()
 {
-    QPainterPath Linie(QPointF(50,25+(Hoehe-25)*(1-Element->getVerhalt(0))));//Setzt den Startpunkt.
-    for (int i=1;i<Element->anzBlaetter();++i)
-    {
-        float Verhalt=Element->getBlattErreicht(i)/(double)Element->getBlattMax(i);
-        Linie.lineTo(QPointF(i*Schritt+50,25+(Hoehe-25)*(1-Verhalt) ));//Setzt die Punkte der Linie
-    }
-    return Linie;
+    Woche=false;
+    LinieEinzel=&LinieEinzelBlaetter;
+    LinieGesamt=&LinieGesamtBlaetter;
 }
 
-QPainterPath Diagramm::LinieGesamtBlaetter(Kurs *Element, double Schritt)
+void Diagramm::setXAchseWoche()
 {
-    QPainterPath Linie(QPointF(50,25+(Hoehe-25)*(1-Element->getVerhalt(0))));//Setzt den Startpunkt.
-    for (int i=1;i<Element->anzBlaetter();++i)
-    {
-        Linie.lineTo(QPointF(i*Schritt+50,25+(Hoehe-25)*(1-Element->getVerhalt(i)) ));//Setzt die Punkte der Linie
-    }
-    return Linie;
+    Woche=true;
+    LinieEinzel=&LinieEinzelWoche;
+    LinieGesamt=&LinieGesamtWoche;
 }
 
 /*!

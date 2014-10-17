@@ -27,11 +27,14 @@ public:
     int getFarbe();
     int getGesammtMaxPunkte() const;
     int getGesammtErreichtPunkte()const;
+    int getMaxWoche() const;
     QString getName() const;
     QColor getQColor();
     int getRythmus();
     double getVerhalt(int Blatt) const;
     double getVerhaltBlatt(int Blatt)const;
+    double getWochenVerhalt(int Woche) const;
+    double getWocheVerhalt(int Woche)const;
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
