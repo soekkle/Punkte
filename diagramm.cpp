@@ -40,11 +40,11 @@ QGraphicsScene* Diagramm::Ausgabe()
     QGraphicsScene* Zeichnung=new QGraphicsScene(Parent);
     int anzElemente=0;
     if (Woche)
-        anzElemente=Kurse->maxWoche()+1;//Ruft die Maximale Anzahl von Wochen ab.
+        anzElemente=Kurse->maxWoche();//Ruft die Maximale Anzahl von Wochen ab.
     else
         anzElemente=Kurse->maxBlatter();//Ruft die Maximale Anzahl von Blättern ab.
     zeichneYAchse(Zeichnung,50,25,Hoehe-25);//Zeichnet eine X-Achse
-    float Schritt=zeichneXAchse(Zeichnung,50,Hoehe,Breite-50,anzElemente-1);
+    float Schritt=zeichneXAchse(Zeichnung,50,Hoehe,Breite-50,anzElemente);
     if (anzElemente==0)//Bricht bei 0 Blättern ab.
         return NULL;
     for (vector<Kurs*>::const_iterator iter=Kurse->begin();iter!=Kurse->end();++iter)
@@ -100,11 +100,11 @@ void Diagramm::enableHilfsLinien()
 
 QPainterPath Diagramm::LinieEinzelBlaetter(Kurs *Element,double Schritt,int Hoehe)
 {
-    QPainterPath Linie(QPointF(50,25+Hoehe*(1-Element->getVerhalt(0))));//Setzt den Startpunkt.
+    QPainterPath Linie(QPointF(50+Schritt,25+Hoehe*(1-Element->getVerhalt(0))));//Setzt den Startpunkt.
     for (int i=1;i<Element->anzBlaetter();++i)
     {
         float Verhalt=Element->getBlattErreicht(i)/(double)Element->getBlattMax(i);
-        Linie.lineTo(QPointF(i*Schritt+50,25+Hoehe*(1-Verhalt) ));//Setzt die Punkte der Linie
+        Linie.lineTo(QPointF((i+1)*Schritt+50,25+Hoehe*(1-Verhalt) ));//Setzt die Punkte der Linie
     }
     return Linie;
 }
@@ -131,10 +131,10 @@ QPainterPath Diagramm::LinieEinzelWoche(Kurs *Element, double Schritt,int Hoehe)
 
 QPainterPath Diagramm::LinieGesamtBlaetter(Kurs *Element, double Schritt,int Hoehe)
 {
-    QPainterPath Linie(QPointF(50,25+Hoehe*(1-Element->getVerhalt(0))));//Setzt den Startpunkt.
+    QPainterPath Linie(QPointF(50+Schritt,25+Hoehe*(1-Element->getVerhalt(0))));//Setzt den Startpunkt.
     for (int i=1;i<Element->anzBlaetter();++i)
     {
-        Linie.lineTo(QPointF(i*Schritt+50,25+Hoehe*(1-Element->getVerhalt(i)) ));//Setzt die Punkte der Linie
+        Linie.lineTo(QPointF((i+1)*Schritt+50,25+Hoehe*(1-Element->getVerhalt(i)) ));//Setzt die Punkte der Linie
     }
     return Linie;
 }
@@ -190,7 +190,7 @@ float Diagramm::zeichneXAchse(QGraphicsScene* Zeichnung,int x, int y, int Lange,
     Zeichnung->addLine(x,y,x+Lange,y);//Fügt die Linie der X-Achse Hinzu.
     QGraphicsTextItem * Text = new QGraphicsTextItem;//Objekt für die Texte der Legende.
     Text->setPos(x,y+10);
-    Text->setPlainText("1");
+    Text->setPlainText("0");
     Zeichnung->addItem(Text);
     float Weite=0;
     int Anz=anzSchritte(Elemente,Lange,&Weite);
@@ -199,7 +199,7 @@ float Diagramm::zeichneXAchse(QGraphicsScene* Zeichnung,int x, int y, int Lange,
     {
         Zeichnung->addLine(i*Weite+x,y+15,i*Weite+x,y-15);
         Text =new QGraphicsTextItem;
-        Text->setPlainText(QString("%1").arg(i*EleSchritt+1));
+        Text->setPlainText(QString("%1").arg(i*EleSchritt));
         Text->setPos(i*Weite+x,y+10);
         Zeichnung->addItem(Text);
     }

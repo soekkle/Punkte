@@ -131,7 +131,7 @@ double Kurs::getVerhaltBlatt(int Blatt) const
 
 double Kurs::getWochenVerhalt(int Woche) const
 {
-    int err=0,max=0,n=anzBlaetter()-1;
+    int err=0,max=0,n=anzBlaetter();
     for (int i=0;i<n;i++)
     {
         if(WochenList[i]<=Woche)
@@ -147,7 +147,7 @@ double Kurs::getWochenVerhalt(int Woche) const
 
 double Kurs::getWocheVerhalt(int Woche) const
 {
-    int err=0,max=0,n=anzBlaetter()-1;
+    int err=0,max=0,n=anzBlaetter();
     for (int i=0;i<n;i++)
     {
         if(WochenList[i]==Woche)
