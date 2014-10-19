@@ -77,6 +77,18 @@ int Kurs::getGesammtMaxPunkte() const
     return Gesammt;
 }
 
+int Kurs::getMaxWoche() const
+{
+    int max=0;
+    for(vector<int>::const_iterator iter=WochenList.begin();iter!=WochenList.end();++iter)
+    {
+        if(*iter>max)
+            max=*iter;
+    }
+    return max;
+}
+
+
 QString Kurs::getName() const
 {
     return KursName;
@@ -115,6 +127,38 @@ double Kurs::getVerhalt(int Blatt)const
 double Kurs::getVerhaltBlatt(int Blatt) const
 {
     return ErPunkteList[Blatt]/(double)MaxPunkteList[Blatt];
+}
+
+double Kurs::getWochenVerhalt(int Woche) const
+{
+    int err=0,max=0,n=anzBlaetter();
+    for (int i=0;i<n;i++)
+    {
+        if(WochenList[i]<=Woche)
+        {
+            max+=MaxPunkteList[i];
+            err+=ErPunkteList[i];
+        }
+    }
+    if (max==0)
+        return -1;
+    return err/(double)max;
+}
+
+double Kurs::getWocheVerhalt(int Woche) const
+{
+    int err=0,max=0,n=anzBlaetter();
+    for (int i=0;i<n;i++)
+    {
+        if(WochenList[i]==Woche)
+        {
+            max+=MaxPunkteList[i];
+            err+=ErPunkteList[i];
+        }
+    }
+    if (max==0)
+        return -1;
+    return err/(double)max;
 }
 
 int Kurs::columnCount(const QModelIndex & /*parent*/) const

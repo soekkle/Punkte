@@ -10,6 +10,9 @@ DiagrammFenster::DiagrammFenster(QWidget *parent) :
     Zeichnung=NULL;
     Graphik=NULL;
     connect(ui->actionSchlie_en,SIGNAL(triggered()),this,SLOT(close()));
+    connect(ui->actionHilfs_Lienien_anzeigen,SIGNAL(triggered(bool)),this,SLOT(hilfslinien(bool)));
+    connect(ui->actionEinzelBl_tter,SIGNAL(triggered(bool)),this,SLOT(einzelblaetter(bool)));
+    connect(ui->actionWoche,SIGNAL(triggered(bool)),this,SLOT(WocheBlaetter(bool)));
 }
 
 DiagrammFenster::~DiagrammFenster()
@@ -32,6 +35,26 @@ void DiagrammFenster::DatenGeaendert()
 {
     if (offen)
         Zeichnen();
+    return;
+}
+
+void DiagrammFenster::einzelblaetter(bool tiggered)
+{
+    if (tiggered)
+        Zeichnung->enableEinzelBlaetter();
+    else
+        Zeichnung->disableEinzelBlaetter();
+    Zeichnen();
+    return;
+}
+
+void DiagrammFenster::hilfslinien(bool tiggered)
+{
+    if (tiggered)
+        Zeichnung->enableHilfsLinien();
+    else
+        Zeichnung->disableHilfsLinien();
+    Zeichnen();
     return;
 }
 
@@ -62,6 +85,14 @@ void DiagrammFenster::show()
     Zeichnung->setMaase(ui->DiagrammView->width()-15,ui->DiagrammView->height()-15);
     Zeichnen();
     return;
+}
+
+void DiagrammFenster::WocheBlaetter(bool tiggered){
+    if (tiggered)
+        Zeichnung->setXAchseWoche();
+    else
+        Zeichnung->setXAcheBlatt();
+    Zeichnen();
 }
 
 void DiagrammFenster::Zeichnen()

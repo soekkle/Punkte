@@ -30,6 +30,10 @@ private:
     bool offen;
     Diagramm *Zeichnung;
     void Zeichnen();
+private slots:
+    void hilfslinien(bool tiggered);
+    void einzelblaetter(bool tiggered);
+    void WocheBlaetter(bool tiggered);
 };
 
 #endif // DIAGRAMMFENSTER_H
