@@ -46,7 +46,7 @@ QGraphicsScene* Diagramm::Ausgabe()
     zeichneYAchse(Zeichnung,50,25,Hoehe-25);//Zeichnet eine X-Achse
     float Schritt=zeichneXAchse(Zeichnung,50,Hoehe,Breite-50,anzElemente);
     if (anzElemente==0)//Bricht bei 0 Blättern ab.
-        return NULL;
+        return Zeichnung;
     for (vector<Kurs*>::const_iterator iter=Kurse->begin();iter!=Kurse->end();++iter)
     {
         Kurs *Element=*iter;
